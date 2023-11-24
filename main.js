@@ -1,12 +1,31 @@
-let app = new PIXI.Application({ background: '#1099bb', resizeTo: window });
+let app = new PIXI.Application({
+    background: '#1099bb',
+    resizeTo: window
+});
 document.body.appendChild(app.view);
 
 let g = new PIXI.Graphics();
 g.beginFill(0xffee88);
-g.drawRect(0, 0, 250, 250);
+g.drawRect(-50, -50, 100, 100); 
 g.endFill();
 
 app.stage.addChild(g);
+centering();
 
-g.x = app.screen.width / 2;
-g.y = app.screen.height / 2;
+
+
+
+
+/* 色々とセンタリングする */
+function centering(){
+    g.x = app.screen.width / 2;
+    g.y = app.screen.height / 2;
+}
+
+let timeoutID = 0;
+window.addEventListener('resize', function(){
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(function(){
+        centering();
+    }, 100);
+}, false);
