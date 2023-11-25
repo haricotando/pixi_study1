@@ -1,3 +1,5 @@
+import { NumberContainer } from './NumberContainer.js';
+
 /* ------------------------------------------------------------
     変数定義
 ------------------------------------------------------------ */
@@ -21,8 +23,9 @@ app.stage.addChild(container);
 ------------------------------------------------------------ */
 function init(){
     addRect();
-    // addBunny();
+    addBunny();
     // addText('A');
+    new NumberContainer();
     
 }
 
@@ -62,9 +65,7 @@ function addBunny(){
     リサイズイベント
 ------------------------------------------------------------ */
 function alignHandler(){
-    // 汎用化を前提に書いておく
-    // container.x = app.screen.width / 2;
-    // container.y = app.screen.height / 2;
+    
 
     let stageCenterX = app.screen.width / 2;
     let stageCenterY = app.screen.height / 2;
@@ -92,6 +93,17 @@ window.addEventListener('resize', function(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 // var circle = new PIXI.Graphics();
 // circle.beginFill(0xFF0000);
 // circle.drawCircle(-20, -20, 40, 40);
@@ -99,11 +111,6 @@ window.addEventListener('resize', function(){
 
 // container.addChild(circle);
 // app.stage.addChild(container);
-
-
-
-
-
 
 /*
     https://qiita.com/geregeregere/items/d8b7b51dd60f22d5e88a
