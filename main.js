@@ -8,8 +8,7 @@ import AlignHelper from './AlignHelper.js';
 let container = new PIXI.Container();
 // リサイズイベントのtimeout
 let timeoutID = 0;
-
-let numCon = [];
+let numberContainer = [];
 
 /* ============================================================
     ステージの初期化
@@ -29,46 +28,32 @@ function init(){
     // パッドの初期化
     let padSize = 180;
     let padMargin = 8;
-    for(let i=0; i<5; i++){
-        let con = new KeyPad(padSize);
-        container.addChild(con);
-        con.x = i*(padSize + padMargin);
-        
+    for(let i=0; i<10; i++){
+        let pad = new KeyPad(padSize, i+1);
+        container.addChild(pad);
+        pad.x = i*(padSize + padMargin);
+        if(i>4){
+            pad.y = padSize + padMargin;
+            pad.x = (i-5)*(padSize + padMargin);
+        }
+        numberContainer.push(pad);
     }
-
-
-    // new KeyPad();
-    // container.addChild(numCon);
-    
 }
 
 init();
 alignHandler();
 
-
-
-
 /* ------------------------------------------------------------
     リサイズイベント
 ------------------------------------------------------------ */
 function alignHandler(){
+    // let stageCenterX = app.screen.width / 2;
+    // let stageCenterY = app.screen.height / 2;
     
-
-    let stageCenterX = app.screen.width / 2;
-    let stageCenterY = app.screen.height / 2;
-    console.log(stageCenterX + ' / ' + stageCenterY);
-    
-    let target = container;
-    target.x = stageCenterX - (target.width / 2);
-    target.y = stageCenterY - (target.height / 2);
-    
-    // destX = targetX + Math.round(targetWidth / 2 - currentWidth / 2);
-    // destY = targetY + Math.round(targetHeight / 2 - currentHeight / 2);
-
-    // target.x = destX + _offset.x;
-    // target.y = destY + _offset.y;
-
-    console.log(container.width)
+    // let target = container;
+    // target.x = stageCenterX - (target.width / 2);
+    // target.y = stageCenterY - (target.height / 2);
+    AlignHelper.center(app.screen, container);
 }
 
 window.addEventListener('resize', function(){
@@ -83,34 +68,40 @@ window.addEventListener('resize', function(){
 
 
 
+
+
+
+
+
+
 /* ------------------------------------------------------------
     
 ------------------------------------------------------------ */
-function addText(arg){
-    text = new PIXI.Text('This is a PixiJS text ++++ superupser   ', {
-        fontFamily: 'Arial',
-        fontSize: 24,
-        fill: 0xff1010,
-        align: 'center',
-    });
-    container.addChild(text);
-}
+// function addText(arg){
+//     text = new PIXI.Text('This is a PixiJS text ++++ superupser   ', {
+//         fontFamily: 'Arial',
+//         fontSize: 24,
+//         fill: 0xff1010,
+//         align: 'center',
+//     });
+//     container.addChild(text);
+// }
 
-function addRect(){
-    let rect = new PIXI.Graphics();
-    rect.beginFill(0xffee88);
-    rect.drawRect(0, 0, 100, 100); 
-    rect.endFill();
+// function addRect(){
+//     let rect = new PIXI.Graphics();
+//     rect.beginFill(0xffee88);
+//     rect.drawRect(0, 0, 100, 100); 
+//     rect.endFill();
     
     
-    container.addChild(rect);
-}
+//     container.addChild(rect);
+// }
 
-function addBunny(){
-    let bunny = PIXI.Sprite.from('https://pixijs.com/assets/bunny.png');
-    bunny.anchor.set(0.5);
-    container.addChild(bunny);
-}
+// function addBunny(){
+//     let bunny = PIXI.Sprite.from('https://pixijs.com/assets/bunny.png');
+//     bunny.anchor.set(0.5);
+//     container.addChild(bunny);
+// }
 
 
 

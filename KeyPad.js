@@ -6,9 +6,10 @@ export class KeyPad extends PIXI.Container {
     static padSize;
     static background;
 
-    constructor(_padSize) {
+    constructor(_padSize, _number) {
         super();
         this.padSize = _padSize;
+        this.number = _number;
         this.init();
     }
 
@@ -20,7 +21,6 @@ export class KeyPad extends PIXI.Container {
         this.background = new PIXI.Graphics();
         this.background.beginFill(0xFFFFFF);
         this.background.drawCircle(this.padSize/2, this.padSize/2, this.padSize/2);
-        // background.drawRect(0, 0, this.padSize, this.padSize);
         this.background.endFill();
         this.container.addChild(this.background);
 
@@ -30,9 +30,9 @@ export class KeyPad extends PIXI.Container {
             fill: 'black',
         });
 
-        this.number = new PIXI.Text('', style);
+        this.number = new PIXI.Text(this.number, style);
         this.container.addChild(this.number);
-        this.number.text = Math.floor(Math.random() * 50);
+        
         this.setEvent();
         AlignHelper.center(this.background, this.number);
     }
@@ -51,10 +51,11 @@ export class KeyPad extends PIXI.Container {
     }
 
     clickHandler(event){
+        this.background.alpha = 0.5;
+        // let next = Math.floor(Math.random() * 100);
+        // this.number.text = next;
+        // AlignHelper.center(this.background,this.number);
 
-        let next = Math.floor(Math.random() * 100);
-        this.number.text = next;
-        AlignHelper.center(this.background,this.number)
     }
 
 }
