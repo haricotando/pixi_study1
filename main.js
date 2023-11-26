@@ -1,4 +1,5 @@
-import { NumberContainer } from './NumberContainer.js';
+import { KeyPad } from './KeyPad.js';
+import AlignHelper from './AlignHelper.js';
 
 /* ------------------------------------------------------------
     変数定義
@@ -7,6 +8,8 @@ import { NumberContainer } from './NumberContainer.js';
 let container = new PIXI.Container();
 // リサイズイベントのtimeout
 let timeoutID = 0;
+
+let numCon = [];
 
 /* ============================================================
     ステージの初期化
@@ -22,44 +25,28 @@ app.stage.addChild(container);
     ここで諸々初期化
 ------------------------------------------------------------ */
 function init(){
-    addRect();
-    addBunny();
-    // addText('A');
-    new NumberContainer();
+    
+    // パッドの初期化
+    let padSize = 180;
+    let padMargin = 8;
+    for(let i=0; i<5; i++){
+        let con = new KeyPad(padSize);
+        container.addChild(con);
+        con.x = i*(padSize + padMargin);
+        
+    }
+
+
+    // new KeyPad();
+    // container.addChild(numCon);
     
 }
 
 init();
 alignHandler();
 
-/* ------------------------------------------------------------
-    
------------------------------------------------------------- */
-function addText(arg){
-    text = new PIXI.Text('This is a PixiJS text ++++ superupser   ', {
-        fontFamily: 'Arial',
-        fontSize: 24,
-        fill: 0xff1010,
-        align: 'center',
-    });
-    container.addChild(text);
-}
 
-function addRect(){
-    let rect = new PIXI.Graphics();
-    rect.beginFill(0xffee88);
-    rect.drawRect(0, 0, 100, 100); 
-    rect.endFill();
-    
-    
-    container.addChild(rect);
-}
 
-function addBunny(){
-    let bunny = PIXI.Sprite.from('https://pixijs.com/assets/bunny.png');
-    bunny.anchor.set(0.5);
-    container.addChild(bunny);
-}
 
 /* ------------------------------------------------------------
     リサイズイベント
@@ -92,6 +79,38 @@ window.addEventListener('resize', function(){
 }, false);
 
 
+
+
+
+
+/* ------------------------------------------------------------
+    
+------------------------------------------------------------ */
+function addText(arg){
+    text = new PIXI.Text('This is a PixiJS text ++++ superupser   ', {
+        fontFamily: 'Arial',
+        fontSize: 24,
+        fill: 0xff1010,
+        align: 'center',
+    });
+    container.addChild(text);
+}
+
+function addRect(){
+    let rect = new PIXI.Graphics();
+    rect.beginFill(0xffee88);
+    rect.drawRect(0, 0, 100, 100); 
+    rect.endFill();
+    
+    
+    container.addChild(rect);
+}
+
+function addBunny(){
+    let bunny = PIXI.Sprite.from('https://pixijs.com/assets/bunny.png');
+    bunny.anchor.set(0.5);
+    container.addChild(bunny);
+}
 
 
 
