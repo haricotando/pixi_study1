@@ -19,9 +19,13 @@ export class KeyPad extends PIXI.Container {
 
         // 背景作成
         this.background = new PIXI.Graphics();
-        this.background.beginFill(0xFFFFFF);
-        this.background.drawCircle(this.padSize/2, this.padSize/2, this.padSize/2);
+        this.background.beginFill(0x000000);
+        this.background.drawRect(0-this.padSize/2, 0-this.padSize/2, this.padSize, this.padSize);
+        this.background.x = this.padSize/2;
+        this.background.y = this.padSize/2;
+        // this.background.drawCircle(this.padSize/2, this.padSize/2, this.padSize/2);
         this.background.endFill();
+        this.background.alpha = 0;
         this.container.addChild(this.background);
 
         const style = new PIXI.TextStyle({
@@ -37,10 +41,6 @@ export class KeyPad extends PIXI.Container {
         AlignHelper.center(this.background, this.number);
     }
 
-    setBackground(){
-
-    }
-
 /* ------------------------------------------------------------
     イベント諸々
 ------------------------------------------------------------ */
@@ -51,11 +51,14 @@ export class KeyPad extends PIXI.Container {
     }
 
     clickHandler(event){
-        this.background.alpha = 0.5;
-        // let next = Math.floor(Math.random() * 100);
-        // this.number.text = next;
-        // AlignHelper.center(this.background,this.number);
+        this.background.alpha = 0.1;
+        this.container.interactive = false;
+        this.background.scale.x = 1.1;
+        this.background.scale.y = 1.1;
+        gsap.to(this.background.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
 
+        this.number.alpha = 0.5;
+        console.log("W");
     }
 
 }

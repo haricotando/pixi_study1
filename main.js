@@ -14,9 +14,10 @@ let numberContainer = [];
     ステージの初期化
 ============================================================ */
 let app = new PIXI.Application({
-    background: '#1099bb',
+    background: '#FFFFFF',
     resizeTo: window
 });
+// background: '#1099bb',
 document.body.appendChild(app.view);
 app.stage.addChild(container);
 
@@ -38,21 +39,34 @@ function init(){
         }
         numberContainer.push(pad);
     }
+    // anim();
 }
+       function loadFonts() {
+            return new Promise(resolve => {
+                const fontLink = document.getElementById('google-fonts');
+                if (fontLink.sheet) {
+                    resolve();
+                } else {
+                    fontLink.onload = resolve;
+                }
+            });
+        }
 
-init();
-alignHandler();
+        loadFonts().then(() => {
+            init();
+            alignHandler();
+        });
+
+
+
+// init();
+// alignHandler();
+
 
 /* ------------------------------------------------------------
-    リサイズイベント
+リサイズイベント
 ------------------------------------------------------------ */
 function alignHandler(){
-    // let stageCenterX = app.screen.width / 2;
-    // let stageCenterY = app.screen.height / 2;
-    
-    // let target = container;
-    // target.x = stageCenterX - (target.width / 2);
-    // target.y = stageCenterY - (target.height / 2);
     AlignHelper.center(app.screen, container);
 }
 
@@ -69,6 +83,16 @@ window.addEventListener('resize', function(){
 
 
 
+// function anim(){
+//     let gcon = new PIXI.Sprite();
+//     let g = new PIXI.Graphics();
+//     g.beginFill(0xFF0000);
+//     g.drawRect(-50, -50, 100, 100);
+//     g.endFill();
+//     gcon.addChild(g);
+//     container.addChild(gcon);
+//     gsap.to(gcon, {alpha: 0.5, duration: 1.5})
+// }
 
 
 
