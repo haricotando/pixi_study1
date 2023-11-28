@@ -41,26 +41,30 @@ function init(){
     }
     // anim();
 }
-       function loadFonts() {
-            return new Promise(resolve => {
-                const fontLink = document.getElementById('google-fonts');
-                if (fontLink.sheet) {
-                    resolve();
-                } else {
-                    fontLink.onload = resolve;
-                }
-            });
-        }
-
-        loadFonts().then(() => {
-            init();
-            alignHandler();
-        });
 
 
+init();
+alignHandler();
 
-// init();
-// alignHandler();
+    //    function loadFonts() {
+    //         return new Promise(resolve => {
+    //             const fontLink = document.getElementById('google-fonts');
+    //             if (fontLink.sheet) {
+    //                 resolve();
+    //             } else {
+    //                 fontLink.onload = resolve;
+    //             }
+    //         });
+    //     }
+
+    //     loadFonts().then(() => {
+    //         addRect();
+            
+    //     });
+
+
+
+
 
 
 /* ------------------------------------------------------------
@@ -111,15 +115,7 @@ window.addEventListener('resize', function(){
 //     container.addChild(text);
 // }
 
-// function addRect(){
-//     let rect = new PIXI.Graphics();
-//     rect.beginFill(0xffee88);
-//     rect.drawRect(0, 0, 100, 100); 
-//     rect.endFill();
-    
-    
-//     container.addChild(rect);
-// }
+
 
 // function addBunny(){
 //     let bunny = PIXI.Sprite.from('https://pixijs.com/assets/bunny.png');
@@ -170,3 +166,11 @@ window.addEventListener('resize', function(){
 
 //     app.stage.addChild(bunny);
 // }
+
+
+// 新しいSpriteを作成
+const sprite = PIXI.Sprite.from('https://pixijs.io/examples/examples/assets/bunny.png');
+
+// anchorを設定
+sprite.anchor.set(0.5); // 例えば、中心点を基準に設定
+app.stage.addChild(sprite)
