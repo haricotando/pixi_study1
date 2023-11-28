@@ -1,4 +1,4 @@
-import AlignHelper from './AlignHelper.js';
+import AlignHelper from '../helper/AlignHelper.js';
 
 export class KeyPad extends PIXI.Container {
     static container;

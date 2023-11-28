@@ -1,0 +1,38 @@
+import { KeyPad } from './KeyPad.js';
+
+export class KeyPadContainer extends PIXI.Container {
+    static background;
+    static keyPadList;
+    /* ============================================================
+        Constructor
+    ============================================================ */
+    constructor() {
+        super();
+        this.init();
+    }
+
+    init(){
+        this.keyPadList = [];
+
+        // 背景・マージン作成
+        let background = new PIXI.Graphics();
+        background.beginFill(0xFFFFFF);
+        background.drawRect(0, 0, 100, 400);
+        background.endFill();
+        this.addChild(background);
+
+        let padSize = 180;
+        let padMargin = 8;
+        for(let i=0; i<10; i++){
+            let pad = new KeyPad(padSize, i+1);
+            this.addChild(pad);
+            pad.x = i*(padSize + padMargin);
+            if(i>4){
+                pad.y = padSize + padMargin;
+                pad.x = (i-5)*(padSize + padMargin);
+            }
+            this.keyPadList.push(pad);
+        }
+
+    }
+}
