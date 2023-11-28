@@ -8,7 +8,8 @@ import AlignHelper from './AlignHelper.js';
 let container = new PIXI.Container();
 // リサイズイベントのtimeout
 let timeoutID = 0;
-let numberContainer = [];
+let keyPadList = [];
+let keyPadContainer = new PIXI.Container();
 
 /* ============================================================
     ステージの初期化
@@ -18,33 +19,43 @@ let app = new PIXI.Application({
     resizeTo: window
 });
 // background: '#1099bb',
-document.body.appendChild(app.view);
-app.stage.addChild(container);
+
 
 /* ------------------------------------------------------------
     ここで諸々初期化
 ------------------------------------------------------------ */
 function init(){
-    
+    document.body.appendChild(app.view);
+    app.stage.addChild(container);
+
     // パッドの初期化
+
+    let keyPadContainerBackground = new PIXI.Graphics();
+    keyPadContainerBackground.beginFill(0xFFFFFF);
+    keyPadContainerBackground.drawRect(0, 0, 100, 400);
+    keyPadContainerBackground.endFill();
+    keyPadContainer.addChild(keyPadContainerBackground);
+
     let padSize = 180;
     let padMargin = 8;
     for(let i=0; i<10; i++){
         let pad = new KeyPad(padSize, i+1);
-        container.addChild(pad);
+        keyPadContainer.addChild(pad);
         pad.x = i*(padSize + padMargin);
         if(i>4){
             pad.y = padSize + padMargin;
             pad.x = (i-5)*(padSize + padMargin);
         }
-        numberContainer.push(pad);
+        keyPadList.push(pad);
     }
-    // anim();
+    
+    app.stage.addChild(keyPadContainer)
 }
-
 
 init();
 alignHandler();
+
+
 
     //    function loadFonts() {
     //         return new Promise(resolve => {
@@ -71,7 +82,7 @@ alignHandler();
 リサイズイベント
 ------------------------------------------------------------ */
 function alignHandler(){
-    AlignHelper.center(app.screen, container);
+    AlignHelper.bottom(app.screen, keyPadContainer);
 }
 
 window.addEventListener('resize', function(){
@@ -169,8 +180,8 @@ window.addEventListener('resize', function(){
 
 
 // 新しいSpriteを作成
-const sprite = PIXI.Sprite.from('https://pixijs.io/examples/examples/assets/bunny.png');
+// const sprite = PIXI.Sprite.from('https://pixijs.io/examples/examples/assets/bunny.png');
 
-// anchorを設定
-sprite.anchor.set(0.5); // 例えば、中心点を基準に設定
-app.stage.addChild(sprite)
+// // anchorを設定
+// sprite.anchor.set(0.5); // 例えば、中心点を基準に設定
+// app.stage.addChild(sprite)
