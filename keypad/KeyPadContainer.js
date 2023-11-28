@@ -3,6 +3,9 @@ import { KeyPad } from './KeyPad.js';
 export class KeyPadContainer extends PIXI.Container {
     static background;
     static keyPadList;
+    // logics
+    static attempt;
+    static currentGuess;
     /* ============================================================
         Constructor
     ============================================================ */
@@ -13,7 +16,6 @@ export class KeyPadContainer extends PIXI.Container {
 
     init(){
         this.keyPadList = [];
-
         // 背景・マージン作成
         let background = new PIXI.Graphics();
         background.beginFill(0xFFFFFF);
@@ -33,6 +35,10 @@ export class KeyPadContainer extends PIXI.Container {
             }
             this.keyPadList.push(pad);
         }
+    }
 
+    resetTry(){
+        this.attempt = 0;
+        this.currentGuess = "";
     }
 }
