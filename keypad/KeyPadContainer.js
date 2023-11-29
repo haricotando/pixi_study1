@@ -31,7 +31,7 @@ export class KeyPadContainer extends PIXI.Container {
         let padSize = 180;
         let padMargin = 8;
         for(let i=0; i<10; i++){
-            let pad = new KeyPad(padSize, i+1);
+            let pad = new KeyPad(padSize, i+1, this.onButtonClick.bind(this));
             this.addChild(pad);
             pad.x = i*(padSize + padMargin);
             if(i>4){
@@ -48,14 +48,18 @@ export class KeyPadContainer extends PIXI.Container {
             fontSize: 180,
             fill: 'black',
         });
-        let char = new PIXI.Text('arrow_upward', style);
-        // this.addChild(char);
+        // let char = new PIXI.Text('arrow_upward', style);
+        // this.addChild(char)；
         
 
         this.submitBtn = new PIXI.Sprite();
         this.addChild(this.submitBtn);
         
         // this.number = new PIXI.Text(this.number, style);
+    }
+
+    onButtonClick(number) {
+        console.log(`Clicked number: ${number}`);
     }
 
     resetTry(){

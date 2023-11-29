@@ -7,14 +7,16 @@ export class KeyPad extends PIXI.Container {
     static number;
 
     static padSize;
+    static eventHandler;
 
     /* ============================================================
         Constructor
     ============================================================ */
-    constructor(_padSize, _number) {
+    constructor(_padSize, _number, eventHandler) {
         super();
         this.padSize = _padSize;
         this.number = _number;
+        this.eventHandler = eventHandler;
         this.init();
     }
 
@@ -52,8 +54,11 @@ export class KeyPad extends PIXI.Container {
 ------------------------------------------------------------ */
     setEvent(){
         this.container.interactive = true;
+        this.container.on('click', () => {
+            this.eventHandler(this.number);
+        });
         this.container.on('click', this.clickHandler.bind(this));
-        this.container.on('touchend', this.clickHandler.bind(this));
+        this.container.on('touchstart', this.clickHandler.bind(this));
     }
 
     clickHandler(event){
@@ -61,8 +66,8 @@ export class KeyPad extends PIXI.Container {
         this.container.interactive = false;
         // this.background.scale.x = 1.1;
         // this.background.scale.y = 1.1;
-        this.number.scale.x = 0.8
-        this.number.scale.y = 0.8
+        this.number.scale.x = 1.5;
+        this.number.scale.y = 1.5;
         gsap.to(this.number.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
         console.log("W");
     }
