@@ -35,7 +35,7 @@ export class KeyPad extends PIXI.Container {
         // 数字
         const style = new PIXI.TextStyle({
             fontFamily: 'Inter',
-            fontSize: this.padSize * 0.7,
+            fontSize: this.padSize * 0.8,
             fill: 'black',
         });
         this.number = new PIXI.Text(this.number, style);

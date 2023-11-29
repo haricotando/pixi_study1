@@ -5,11 +5,8 @@ import { KeyPadContainer } from './keypad/KeyPadContainer.js';
 /* ------------------------------------------------------------
     変数定義
 ------------------------------------------------------------ */
-// メインコンテナ
-let container = new PIXI.Container();
 // リサイズイベントのtimeout
 let timeoutID = 0;
-let keyPadContainer;
 
 /* ============================================================
     ステージの初期化
@@ -18,42 +15,66 @@ let app = new PIXI.Application({
     background: '#FFFFFF',
     resizeTo: window
 });
+document.body.appendChild(app.view);
+
+// コンテナ用意
+let container;
+let keyPadContainer;
+
+/* ------------------------------------------------------------
+    アセット読み込み
+------------------------------------------------------------ */
+WebFont.load({
+    google: {
+      families: ["Inter:100"],
+    },
+    
+    active: () => {
+        init();
+        alignHandler();
+        console.log('OK: Font');
+    },
+    // フォント読み込み失敗時
+    inactive: () => {
+        console.log("ER: Font");
+    },
+  });
 
 /* ------------------------------------------------------------
     ここで諸々初期化
 ------------------------------------------------------------ */
 function init(){
-    document.body.appendChild(app.view);
+    container = new PIXI.Container();
     app.stage.addChild(container);
-
+    
     keyPadContainer = new KeyPadContainer();
     container.addChild(keyPadContainer);
-
-    // パッドの初期化
-    // let keyPadContainerBackground = new PIXI.Graphics();
-    // keyPadContainerBackground.beginFill(0xFFFFFF);
-    // keyPadContainerBackground.drawRect(0, 0, 100, 400);
-    // keyPadContainerBackground.endFill();
-    // keyPadContainer.addChild(keyPadContainerBackground);
-
-    // let padSize = 180;
-    // let padMargin = 8;
-    // for(let i=0; i<10; i++){
-    //     let pad = new KeyPad(padSize, i+1);
-    //     keyPadContainer.addChild(pad);
-    //     pad.x = i*(padSize + padMargin);
-    //     if(i>4){
-    //         pad.y = padSize + padMargin;
-    //         pad.x = (i-5)*(padSize + padMargin);
-    //     }
-    //     keyPadList.push(pad);
-    // }
-    
-    // app.stage.addChild(keyPadContainer)
 }
 
-init();
-alignHandler();
+/* ------------------------------------------------------------
+リサイズイベント
+------------------------------------------------------------ */
+function alignHandler(){
+    AlignHelper.bottom(app.screen, keyPadContainer);
+}
+
+window.addEventListener('resize', function(){
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(function(){
+        alignHandler();
+    }, 50);
+}, false);
+
+
+
+
+
+
+
+
+
+// init();
+// alignHandler();
 
 
 
@@ -78,19 +99,6 @@ alignHandler();
 
 
 
-/* ------------------------------------------------------------
-リサイズイベント
------------------------------------------------------------- */
-function alignHandler(){
-    AlignHelper.bottom(app.screen, keyPadContainer);
-}
-
-window.addEventListener('resize', function(){
-    clearTimeout(timeoutID);
-    timeoutID = setTimeout(function(){
-        alignHandler();
-    }, 50);
-}, false);
 
 
 

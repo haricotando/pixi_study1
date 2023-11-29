@@ -3,6 +3,10 @@ import { KeyPad } from './KeyPad.js';
 export class KeyPadContainer extends PIXI.Container {
     static background;
     static keyPadList;
+
+    static uiContainer;
+    static submitBtn;
+    static deleteBtn;
     // logics
     static attempt;
     static currentGuess;
@@ -23,6 +27,7 @@ export class KeyPadContainer extends PIXI.Container {
         background.endFill();
         this.addChild(background);
 
+        // KeyPad作成
         let padSize = 180;
         let padMargin = 8;
         for(let i=0; i<10; i++){
@@ -35,6 +40,22 @@ export class KeyPadContainer extends PIXI.Container {
             }
             this.keyPadList.push(pad);
         }
+
+        this.uiContainer = new PIXI.Container();
+        // Submit / Delete
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Material Icons',
+            fontSize: 180,
+            fill: 'black',
+        });
+        let char = new PIXI.Text('arrow_upward', style);
+        // this.addChild(char);
+        
+
+        this.submitBtn = new PIXI.Sprite();
+        this.addChild(this.submitBtn);
+        
+        // this.number = new PIXI.Text(this.number, style);
     }
 
     resetTry(){
