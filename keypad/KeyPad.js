@@ -1,74 +1,72 @@
 import AlignHelper from '../helper/AlignHelper.js';
 
 export class KeyPad extends PIXI.Container {
-    static container;
-    static background;
-    // static numContainer;
+    // ここで宣言しなくてもよくね？
     static number;
-
-    static padSize;
-    static eventHandler;
-
+    static style;
     /* ============================================================
         Constructor
     ============================================================ */
-    constructor(_padSize, _number, eventHandler) {
+    constructor(padSize, number, eventHandler) {
         super();
-        this.padSize = _padSize;
-        this.number = _number;
-        this.eventHandler = eventHandler;
-        this.init();
-    }
 
-    init(){
+        this.number = number;
+        this.eventHandler = eventHandler;    
         this.container = new PIXI.Container();
         this.addChild(this.container);
         
-
         // 背景作成
-        this.background = new PIXI.Graphics();
-        this.background.beginFill(0x000000);
-        this.background.drawRect(0, 0, this.padSize, this.padSize);
-        
-        this.background.endFill();
-        this.background.alpha = 0;
-        this.container.addChild(this.background);
-
-        // 数字
-        const style = new PIXI.TextStyle({
-            fontFamily: 'Inter',
-            fontSize: this.padSize * 0.8,
-            fill: 'black',
-        });
-        this.number = new PIXI.Text(this.number, style);
-        this.number.anchor.set(0.5);
-        this.number.x = this.padSize / 2;
-        this.number.y = this.padSize / 2;
-        this.container.addChild(this.number);
+        this.backgroundContainer = new PIXI.Sprite();
+        this.addChild(this.backgroundContainer);
+        let background = new PIXI.Graphics();
+        background.beginFill(0x000000);
+        background.drawRect(0, 0, padSize, padSize);
+        background.endFill();
+        background.x = 0 - padSize/2;
+        background.y = 0 - padSize/2;
+        this.backgroundContainer.alpha = 0;
+        this.backgroundContainer.x = padSize/2;
+        this.backgroundContainer.y = padSize/2;
+        this.backgroundContainer.addChild(background);
     
-        this.setEvent();
-    }
-
-/* ------------------------------------------------------------
-    イベント諸々
------------------------------------------------------------- */
-    setEvent(){
+        // 数字
+        this.style = new PIXI.TextStyle({
+            fontFamily:     'Inter',
+            fontSize:       padSize * 0.8,
+            fontWeight:     100,
+            fill:           'black',
+        });
+        this.number = new PIXI.Text(this.number, this.style);
+        this.number.anchor.set(0.5);
+        this.number.x = padSize / 2;
+        this.number.y = padSize / 2;
+        this.number.alpha = 0.5;
+        this.container.addChild(this.number);
+        // ボタンイベント
         this.container.interactive = true;
         this.container.on('click', () => {
-            this.eventHandler(this.number);
+            console.log(number);
+            eventHandler(number);
         });
         this.container.on('click', this.clickHandler.bind(this));
         this.container.on('touchstart', this.clickHandler.bind(this));
     }
 
     clickHandler(event){
-        this.background.alpha = 0.05;
-        this.container.interactive = false;
-        // this.background.scale.x = 1.1;
-        // this.background.scale.y = 1.1;
+        // this.container.interactive = false;
+        this.style.fontWeight = 200;
         this.number.scale.x = 1.5;
         this.number.scale.y = 1.5;
+        this.number.alpha = 1;
         gsap.to(this.number.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
+
+        this.backgroundContainer.alpha = 0.05;
+        this.backgroundContainer.scale.x = 2;
+        this.backgroundContainer.scale.y = 2;
+        gsap.to(this.backgroundContainer.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
+        gsap.to(this.backgroundContainer, {alpha:0, duration:0.8})
+        
+
         console.log("W");
     }
 

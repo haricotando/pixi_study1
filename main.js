@@ -26,7 +26,7 @@ let keyPadContainer;
 ------------------------------------------------------------ */
 WebFont.load({
     google: {
-      families: ["Inter:100"],
+      families: ["Inter:100,200"],
     },
     
     active: () => {
@@ -46,7 +46,7 @@ WebFont.load({
 function init(){
     container = new PIXI.Container();
     app.stage.addChild(container);
-    
+
     keyPadContainer = new KeyPadContainer();
     container.addChild(keyPadContainer);
 }

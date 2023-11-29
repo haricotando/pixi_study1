@@ -54,8 +54,6 @@ export class KeyPadContainer extends PIXI.Container {
 
         this.submitBtn = new PIXI.Sprite();
         this.addChild(this.submitBtn);
-        
-        // this.number = new PIXI.Text(this.number, style);
     }
 
     onButtonClick(number) {
