@@ -1,4 +1,5 @@
 import { KeyPad } from './KeyPad.js';
+import { AttempContainer } from './AttemptContainer.js';
 
 export class KeyPadContainer extends PIXI.Container {
     static background;
@@ -7,6 +8,7 @@ export class KeyPadContainer extends PIXI.Container {
     static uiContainer;
     static submitBtn;
     static deleteBtn;
+    static attempContainer;
     // logics
     static attempt;
     static currentGuess;
@@ -41,19 +43,29 @@ export class KeyPadContainer extends PIXI.Container {
             this.keyPadList.push(pad);
         }
 
-        this.uiContainer = new PIXI.Container();
-        // Submit / Delete
-        const style = new PIXI.TextStyle({
-            fontFamily: 'Material Icons',
-            fontSize: 180,
-            fill: 'black',
-        });
+
+        this.attempContainer = new AttempContainer();
+        this.addChild(this.attempContainer);
+
+
+        // this.uiContainer = new PIXI.Container();
+        // // Submit / Delete
+        // const style = new PIXI.TextStyle({
+        //     fontFamily: 'Material Icons',
+        //     fontSize: 180,
+        //     fill: 'black',
+        // });
+        
         // let char = new PIXI.Text('arrow_upward', style);
         // this.addChild(char)；
         
 
-        this.submitBtn = new PIXI.Sprite();
-        this.addChild(this.submitBtn);
+        // this.submitBtn = new PIXI.Sprite();
+        // this.addChild(this.submitBtn);
+    }
+
+    initAttempt(){
+        
     }
 
     onButtonClick(number) {

@@ -1,4 +1,4 @@
-import AlignHelper from '../helper/AlignHelper.js';
+// import AlignHelper from '../helper/AlignHelper.js';
 
 export class KeyPad extends PIXI.Container {
     // ここで宣言しなくてもよくね？
