@@ -64,10 +64,7 @@ export class KeyPad extends PIXI.Container {
         this.backgroundContainer.scale.x = 2;
         this.backgroundContainer.scale.y = 2;
         gsap.to(this.backgroundContainer.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
-        gsap.to(this.backgroundContainer, {alpha:0, duration:0.8})
-        
-
-        console.log("W");
+        gsap.to(this.backgroundContainer, {alpha:0.05, duration:0.8})
     }
 
 }

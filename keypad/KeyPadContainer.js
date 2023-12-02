@@ -1,22 +1,15 @@
 import { KeyPad } from './KeyPad.js';
-import { AttempContainer } from './AttemptContainer.js';
+// import AlignHelper from '../helper/AlignHelper.js';
 
 export class KeyPadContainer extends PIXI.Container {
     static background;
     static keyPadList;
-
-    static uiContainer;
-    static submitBtn;
-    static deleteBtn;
-    static attempContainer;
-    // logics
-    static attempt;
-    static currentGuess;
     /* ============================================================
         Constructor
     ============================================================ */
     constructor() {
         super();
+        this.padSize = 180;
         this.init();
     }
 
@@ -24,56 +17,40 @@ export class KeyPadContainer extends PIXI.Container {
         this.keyPadList = [];
         // 背景・マージン作成
         let background = new PIXI.Graphics();
-        background.beginFill(0xFFFFFF);
-        background.drawRect(0, 0, 100, 400);
+        background.beginFill(0xFF0000);
+        background.drawRect(0, 0, 10, this.padSize*2 + 30);
         background.endFill();
         this.addChild(background);
 
         // KeyPad作成
-        let padSize = 180;
         let padMargin = 8;
         for(let i=0; i<10; i++){
-            let pad = new KeyPad(padSize, i+1, this.onButtonClick.bind(this));
+            let pad = new KeyPad(this.padSize, i+1, this.onButtonClick.bind(this));
             this.addChild(pad);
-            pad.x = i*(padSize + padMargin);
+            pad.x = i*(this.padSize + padMargin);
             if(i>4){
-                pad.y = padSize + padMargin;
-                pad.x = (i-5)*(padSize + padMargin);
+                pad.y = this.padSize + padMargin;
+                pad.x = (i-5)*(this.padSize + padMargin);
             }
             this.keyPadList.push(pad);
         }
 
-
-        this.attempContainer = new AttempContainer();
-        this.addChild(this.attempContainer);
-
-
-        // this.uiContainer = new PIXI.Container();
-        // // Submit / Delete
-        // const style = new PIXI.TextStyle({
-        //     fontFamily: 'Material Icons',
-        //     fontSize: 180,
-        //     fill: 'black',
-        // });
-        
-        // let char = new PIXI.Text('arrow_upward', style);
-        // this.addChild(char)；
-        
-
-        // this.submitBtn = new PIXI.Sprite();
-        // this.addChild(this.submitBtn);
-    }
-
-    initAttempt(){
         
     }
 
     onButtonClick(number) {
-        console.log(`Clicked number: ${number}`);
-    }
+        this.parent.onKeyPad(number);
+        // console.log(`Clicked number: ${number}`);
+        // if(this.attempt<4){
+        //     this.attempt ++;
+        //     this.guess = new GuessNumber().attachNum(number);
+        //     this.addChild(this.guess);
+        //     this.guess.x = this.padSize * this.attempt;
+        //     AlignHelper.bottom(parent, this);
+        //     // this.guess.attachNum(number);
+        // }else{
 
-    resetTry(){
-        this.attempt = 0;
-        this.currentGuess = "";
+        // }
+
     }
 }
