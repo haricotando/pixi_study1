@@ -7,11 +7,9 @@ export class KeyPad extends PIXI.Container {
     /* ============================================================
         Constructor
     ============================================================ */
-    constructor(padSize, number, eventHandler) {
+    constructor(padSize, number) {
         super();
-
-        this.number = number;
-        this.eventHandler = eventHandler;    
+        this.number = number
         this.container = new PIXI.Container();
         this.addChild(this.container);
         
@@ -36,29 +34,29 @@ export class KeyPad extends PIXI.Container {
             fontWeight:     100,
             fill:           'black',
         });
-        this.number = new PIXI.Text(this.number, this.style);
-        this.number.anchor.set(0.5);
-        this.number.x = padSize / 2;
-        this.number.y = padSize / 2;
-        this.number.alpha = 0.5;
-        this.container.addChild(this.number);
+        this.numberText = new PIXI.Text(this.number, this.style);
+        this.numberText.anchor.set(0.5);
+        this.numberText.x = padSize / 2;
+        this.numberText.y = padSize / 2;
+        this.numberText.alpha = 0.5;
+        this.container.addChild(this.numberText);
         // ボタンイベント
         this.container.interactive = true;
-        this.container.on('click', () => {
-            console.log(number);
-            eventHandler(number);
+        this.container.on('touchstart', (event) => {
+            this.clickHandler(event);
         });
-        this.container.on('click', this.clickHandler.bind(this));
-        this.container.on('touchstart', this.clickHandler.bind(this));
+        // this.container.on('click', this.clickHandler.bind(this));
+        // this.container.on('touchstart', this.clickHandler.bind(this));
     }
 
     clickHandler(event){
-        // this.container.interactive = false;
+        this.parent.parent.onGuessHandler(this.number)
+        console.log('------------------------------------------------\nKeyPad>clickHander: ');
         this.style.fontWeight = 200;
-        this.number.scale.x = 1.5;
-        this.number.scale.y = 1.5;
-        this.number.alpha = 1;
-        gsap.to(this.number.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
+        this.numberText.scale.x = 1.5;
+        this.numberText.scale.y = 1.5;
+        this.numberText.alpha = 1;
+        gsap.to(this.numberText.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
 
         this.backgroundContainer.alpha = 0.05;
         this.backgroundContainer.scale.x = 2;

@@ -24,8 +24,9 @@ export class KeyPadContainer extends PIXI.Container {
 
         // KeyPad作成
         let padMargin = 8;
+        
         for(let i=0; i<10; i++){
-            let pad = new KeyPad(this.padSize, i+1, this.onButtonClick.bind(this));
+            let pad = new KeyPad(this.padSize, i==9?0:i+1);
             this.addChild(pad);
             pad.x = i*(this.padSize + padMargin);
             if(i>4){
@@ -34,12 +35,16 @@ export class KeyPadContainer extends PIXI.Container {
             }
             this.keyPadList.push(pad);
         }
-
-        
     }
 
-    onButtonClick(number) {
-        this.parent.onKeyPad(number);
+    echo(){
+        console.log('echo reach');
+    }
+
+
+    // onButtonClick(number) {
+        // console.log('KeyPadConatiner: -- onButtonClick')
+        // this.parent.onKeyPad(number);
         // console.log(`Clicked number: ${number}`);
         // if(this.attempt<4){
         //     this.attempt ++;
@@ -52,5 +57,5 @@ export class KeyPadContainer extends PIXI.Container {
 
         // }
 
-    }
+    // }
 }

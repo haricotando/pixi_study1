@@ -1,6 +1,5 @@
 import { KeyPadContainer } from './keypad/KeyPadContainer.js';
 import { GuessContainer } from './guess/GuessContainer.js';
-
 // import AlignHelper from './helper/AlignHelper.js';
 
 export class ApplicationRoot extends PIXI.Container {
@@ -19,6 +18,9 @@ export class ApplicationRoot extends PIXI.Container {
         this.attempt = 0;
         this.currentGuess = '';
 
+        // Logic
+        this.secretCode = this.generateSecretCode();
+
         // KeyPad
         this.keyPadContainer = new KeyPadContainer();
         this.addChild(this.keyPadContainer);
@@ -29,44 +31,29 @@ export class ApplicationRoot extends PIXI.Container {
         
         window.addEventListener('resize', this.resizeHandler.bind(this));
         this.resizeHandler();
-
-        // debug
-        this.setBG();
-
-        this.secretCode = this.generateSecretCode();
     }
 
-    onKeyPad(number){
-        console.log('keyPaddddd')
-        this.guessContainer.number.text = "xx";
+/* ------------------------------------------------------------
+    キーパッドイベント
+------------------------------------------------------------ */
+    onGuessHandler(number){
         if(this.currentGuess.includes(number.toString())){
             return false;
         }
+        console.log('this.currentGuess.length: ' + this.currentGuess.length);
         this.currentGuess += number.toString();
-        console.log(this.currentGuess);
         if(this.currentGuess.length !== 4){
-            // this.guessContainer.number.text = ('***' + this.currentGuess).slice(-4);    
-        // document.getElementById("currentGuess").textContent = ('***' + currentGuess).slice(-4);    
+            console.log("AAAAA");
+            this.guessContainer.number.text = ('***' + this.currentGuess).slice(-4);
         }else{
-        // validGuess(currentGuess);
-        // document.getElementById("currentGuess").textContent = "****";
-        // currentGuess = "";
+            console.log("BBBBB");
+            this.validGuess(this.currentGuess);
+        this.currentGuess = "";
         }
-
-
-
     }
 
     echo() {
         console.log('here');
-    }
-
-    setBG(){
-        let g = new PIXI.Graphics();
-        g.beginFill(0xFF0000);
-        g.drawCircle(0,0,20);
-        g.endFill();
-        this.addChild(g)
     }
 
 /* ------------------------------------------------------------
@@ -96,7 +83,27 @@ generateSecretCode() {
        const digit = digits.splice(randomIndex, 1)[0];
        secretCode += digit;
     }
+    console.log(`SECRET: ${secretCode}`)
     return secretCode;
+  }
+
+  validGuess(guess){
+    this.attempt ++;
+    if (this.currentGuess === this.secretCode) {
+        alert("Great");
+    } else {
+      let isMatch = '';
+      let isIncluded = '';
+      for(let i = 0; i< 4; i++){
+        if(this.currentGuess[i] === this.secretCode[i]){
+          isMatch += "🙆‍♂";
+        }else if(this.secretCode.includes(this.currentGuess[i])){
+          isIncluded +="🤔";
+        }
+      }
+      let feedback = isMatch + isIncluded;
+      console.log(`Attempt ${this.attempt}: ${this.currentGuess} → ${feedback}`);
+    }
   }
 
 
