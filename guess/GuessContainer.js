@@ -36,7 +36,7 @@ export class GuessContainer extends PIXI.Container {
 
         let btnLabel = new PIXI.Text('X', this.style);
         this.btnBackspace.addChild(btnLabel);
-        this.btnBackspace.y = 140;
+        this.btnBackspace.x = -140;
 
         this.btnBackspace.on('touchstart', (event) => {
             this.parent.guessResetHandler();

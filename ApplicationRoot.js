@@ -1,5 +1,6 @@
 import { KeyPadContainer } from './keypad/KeyPadContainer.js';
 import { GuessContainer } from './guess/GuessContainer.js';
+import { AttemptContainer } from './attempt/AttemptContainer.js';
 // import AlignHelper from './helper/AlignHelper.js';
 
 export class ApplicationRoot extends PIXI.Container {
@@ -19,16 +20,21 @@ export class ApplicationRoot extends PIXI.Container {
         this.attempt = 0;
         this.guessList = [];
 
-        // Logic
+        // ----------- Logic
         this.secretCode = this.generateSecretCode();
-
-        // KeyPad
+        
+        // 
+        // ----------- KeyPad
         this.keyPadContainer = new KeyPadContainer();
         this.addChild(this.keyPadContainer);
-
-        // Guess
+        
+        // ----------- Guess
         this.guessContainer = new GuessContainer();
         this.addChild(this.guessContainer);
+
+        // ----------- Attempt
+        this.attemptContainer = new AttemptContainer();
+        this.addChild(this.attemptContainer);
         
         window.addEventListener('resize', this.resizeHandler.bind(this));
         this.resizeHandler();
@@ -54,19 +60,27 @@ export class ApplicationRoot extends PIXI.Container {
         if(guessAsText === this.secretCode){
             alert('Match');
         }else{
-            let isMatch = '';
-            let isIncluded = '';
+            let isMatch = 0;
+            let isIncluded = 0;
             for(let i = 0; i< 4; i++){
                 if(guessAsText[i] === this.secretCode[i]){
-                    isMatch += "🙆‍♂";
+                    isMatch ++;
                 }else if(this.secretCode.includes(guessAsText[i])){
-                    isIncluded +="🤔";
+                    isIncluded ++;
                 }
             }
-            let feedback = isMatch + isIncluded;
+            let feedback = '';
+            if(isMatch > 0 && isIncluded > 0){
+                feedback = `${isMatch}H / ${isIncluded}B`;
+            }else{
+                feedback = isMatch > 0 ? `${isMatch}H` : feedback;
+                feedback = isIncluded > 0 ? `${isIncluded}B` : feedback;
+            }
+
             this.guessResetHandler();
             this.updateGuessContainer();
-            console.log(`Attempt ${this.attempt}: ${guessAsText} → ${feedback}`);
+            // console.log(`Attempt ${this.attempt}: ${guessAsText} → ${feedback}`);
+            this.attemptContainer.addAttemptLog(guessAsText, feedback);
         }
     }
 
@@ -94,7 +108,12 @@ export class ApplicationRoot extends PIXI.Container {
 
         this.guessContainer.position.set(
             (window.innerWidth - this.guessContainer.width)/2, 
-            // window.innerHeight - this.guessContainer.height
+            window.innerHeight - this.guessContainer.height-350
+            );
+
+        this.attemptContainer.position.set(
+            (window.innerWidth - this.attemptContainer.width)/2, 
+            0
             );
     }
 
