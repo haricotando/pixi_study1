@@ -34,9 +34,13 @@ export class GuessContainer extends PIXI.Container {
         this.addChild(this.btnBackspace);
         this.btnBackspace.interactive = true;
 
-        let btnLabel = new PIXI.Text('↓', this.style);
+        let btnLabel = new PIXI.Text('X', this.style);
         this.btnBackspace.addChild(btnLabel);
-        this.btnBackspace.y = 200;
+        this.btnBackspace.y = 140;
+
+        this.btnBackspace.on('touchstart', (event) => {
+            this.parent.guessResetHandler();
+        });
 
         // Submit
         this.btnSubmit = new PIXI.Sprite();
@@ -47,9 +51,8 @@ export class GuessContainer extends PIXI.Container {
         this.btnSubmit.addChild(btnLabelSubmit);
         this.btnSubmit.x = 400;
         
-
-        this.btnBackspace.on('touchstart', (event) => {
-            this.parent.guessResetHandler();
+        this.btnSubmit.on('touchstart', (event) => {
+            this.parent.guessSubmitHandler();
         });
 
 

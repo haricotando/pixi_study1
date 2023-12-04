@@ -19,7 +19,7 @@ export class KeyPadContainer extends PIXI.Container {
         // 背景・マージン作成
         let background = new PIXI.Graphics();
         background.beginFill(0xFF0000);
-        background.drawRect(0, 0, 10, this.padSize*2 + 30);
+        background.drawRect(0, 0, 2, this.padSize*2 + 30);
         background.endFill();
         this.addChild(background);
 

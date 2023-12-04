@@ -7,7 +7,6 @@ export class ApplicationRoot extends PIXI.Container {
     static guessContainer;
     static timeoutID;
     static attempt;
-    static currentGuess;
     //
     static guessList;
 
@@ -18,7 +17,6 @@ export class ApplicationRoot extends PIXI.Container {
         super();
         this.timeoutID = 0;
         this.attempt = 0;
-        this.currentGuess = '';
         this.guessList = [];
 
         // Logic
@@ -40,14 +38,7 @@ export class ApplicationRoot extends PIXI.Container {
     キーパッドイベント
 ------------------------------------------------------------ */
     onGuessHandler(number){
-        if(this.currentGuess.includes(number.toString())){
-            return false;
-        }
-        
         if(this.guessList.length < 4){
-            // 管理を currentGuess, guestlistどちらかへ統一する
-            //
-            this.currentGuess += number.toString();
             this.guessList.push(number);
             this.updateGuessContainer();
             if(this.guessList.length == 4){
@@ -55,31 +46,42 @@ export class ApplicationRoot extends PIXI.Container {
                 this.keyPadContainer.inactiveByLimit4();
             }
         }
-    
-        
-        // this.validGuess(this.currentGuess);
+    }
+
+    guessSubmitHandler(){
+        this.attempt ++;
+        let guessAsText = this.guessList.join('');
+        if(guessAsText === this.secretCode){
+            alert('Match');
+        }else{
+            let isMatch = '';
+            let isIncluded = '';
+            for(let i = 0; i< 4; i++){
+                if(guessAsText[i] === this.secretCode[i]){
+                    isMatch += "🙆‍♂";
+                }else if(this.secretCode.includes(guessAsText[i])){
+                    isIncluded +="🤔";
+                }
+            }
+            let feedback = isMatch + isIncluded;
+            this.guessResetHandler();
+            this.updateGuessContainer();
+            console.log(`Attempt ${this.attempt}: ${guessAsText} → ${feedback}`);
+        }
     }
 
     guessResetHandler(){
         this.guessList = [];
-        this.currentGuess = '';
         this.keyPadContainer.resetKeyPads();
         this.updateGuessContainer();
     }
-
-    // onBackspaceHandler(){
-    //     if(this.guessList.length > 0){
-    //         let deleteElement = this.guessList.pop();
-    //         console.log(deleteElement)
-
-    //         this.currentGuess = this.currentGuess.slice(0, -1);
-    //     }
-    //     this.updateGuessContainer();
-    // }
     
     updateGuessContainer(){
-        this.guessContainer.number.text = ('***' + this.currentGuess).slice(-4);
-        console.log('guesttList: ' + this.guessList);
+        let output = '';
+        for(let i=0; i<4; i++){
+            output += this.guessList[i] === undefined ? '*' : this.guessList[i];
+        }
+        this.guessContainer.number.text = output;
     }
 /* ------------------------------------------------------------
     リサイズイベント
@@ -113,21 +115,21 @@ generateSecretCode() {
 
   validGuess(guess){
     this.attempt ++;
-    if (this.currentGuess === this.secretCode) {
-        alert("Great");
-    } else {
-        let isMatch = '';
-        let isIncluded = '';
-        for(let i = 0; i< 4; i++){
-            if(this.currentGuess[i] === this.secretCode[i]){
-                isMatch += "🙆‍♂";
-            }else if(this.secretCode.includes(this.currentGuess[i])){
-                isIncluded +="🤔";
-            }
-        }
-        let feedback = isMatch + isIncluded;
-        console.log(`Attempt ${this.attempt}: ${this.currentGuess} → ${feedback}`);
-    }
+    // if (this.currentGuess === this.secretCode) {
+    //     alert("Great");
+    // } else {
+    //     let isMatch = '';
+    //     let isIncluded = '';
+    //     for(let i = 0; i< 4; i++){
+    //         if(this.currentGuess[i] === this.secretCode[i]){
+    //             isMatch += "🙆‍♂";
+    //         }else if(this.secretCode.includes(this.currentGuess[i])){
+    //             isIncluded +="🤔";
+    //         }
+    //     }
+    //     let feedback = isMatch + isIncluded;
+    //     console.log(`Attempt ${this.attempt}: ${this.currentGuess} → ${feedback}`);
+    // }
   }
 
     echo(){
