@@ -25,8 +25,10 @@ export class KeyPadContainer extends PIXI.Container {
 
         // KeyPad作成
         let padMargin = 8;
+        let valueIndex = 0;
         for(let i=0; i<10; i++){
-            let pad = new KeyPad(this.padSize, i);
+            
+            let pad = new KeyPad(this.padSize, i==9?0:i+1);
             this.addChild(pad);
             // 配置調整
             
