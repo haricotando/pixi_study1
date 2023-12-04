@@ -10,6 +10,7 @@ export class KeyPadContainer extends PIXI.Container {
     constructor() {
         super();
         this.padSize = 180;
+        
         this.init();
     }
 
@@ -24,10 +25,11 @@ export class KeyPadContainer extends PIXI.Container {
 
         // KeyPad作成
         let padMargin = 8;
-        
         for(let i=0; i<10; i++){
-            let pad = new KeyPad(this.padSize, i==9?0:i+1);
+            let pad = new KeyPad(this.padSize, i);
             this.addChild(pad);
+            // 配置調整
+            
             pad.x = i*(this.padSize + padMargin);
             if(i>4){
                 pad.y = this.padSize + padMargin;
@@ -37,25 +39,15 @@ export class KeyPadContainer extends PIXI.Container {
         }
     }
 
-    echo(){
-        console.log('echo reach');
+    inactiveByLimit4(){
+        for(let i=0; i<10; i++){
+            this.keyPadList[i].mute();
+        }
     }
 
-
-    // onButtonClick(number) {
-        // console.log('KeyPadConatiner: -- onButtonClick')
-        // this.parent.onKeyPad(number);
-        // console.log(`Clicked number: ${number}`);
-        // if(this.attempt<4){
-        //     this.attempt ++;
-        //     this.guess = new GuessNumber().attachNum(number);
-        //     this.addChild(this.guess);
-        //     this.guess.x = this.padSize * this.attempt;
-        //     AlignHelper.bottom(parent, this);
-        //     // this.guess.attachNum(number);
-        // }else{
-
-        // }
-
-    // }
+    resetKeyPads(){
+        for(let i=0; i<10; i++){
+            this.keyPadList[i].revibe();
+        }
+    }
 }

@@ -46,16 +46,15 @@ export class KeyPad extends PIXI.Container {
             this.clickHandler(event);
         });
         // this.container.on('click', this.clickHandler.bind(this));
-        // this.container.on('touchstart', this.clickHandler.bind(this));
     }
 
     clickHandler(event){
-        this.parent.parent.onGuessHandler(this.number)
-        console.log('------------------------------------------------\nKeyPad>clickHander: ');
+        this.parent.parent.onGuessHandler(this.number);
+        this.container.interactive = false;
         this.style.fontWeight = 200;
         this.numberText.scale.x = 1.5;
         this.numberText.scale.y = 1.5;
-        this.numberText.alpha = 1;
+        // this.numberText.alpha = 1;
         gsap.to(this.numberText.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
 
         this.backgroundContainer.alpha = 0.05;
@@ -63,6 +62,31 @@ export class KeyPad extends PIXI.Container {
         this.backgroundContainer.scale.y = 2;
         gsap.to(this.backgroundContainer.scale, {x: 1, y: 1, duration: 0.25, ease: 'back'});
         gsap.to(this.backgroundContainer, {alpha:0.05, duration:0.8})
+    }
+
+    mute(){
+        this.container.interactive = false;
+        gsap.killTweensOf(this.numberText);
+        gsap.killTweensOf(this.backgroundContainer);
+        this.numberText.alpha = 0.1;
+    }
+
+    
+    revibe(){
+        console.log('revibe');
+        this.container.interactive = true;
+        this.style.fontWeight = 100;
+        gsap.killTweensOf(this.numberText);
+        gsap.killTweensOf(this.backgroundContainer);
+        this.numberText.scale.x = 1;
+        this.numberText.scale.y = 1;
+        this.numberText.alpha = 0.5;
+        this.backgroundContainer.alpha = 0;
+        this.backgroundContainer.scale.x = 1;
+        this.backgroundContainer.scale.y = 1;
+
+        // this.style.fontWeight = 100;
+        // this.numberText.scale(1, 1);
     }
 
 }
