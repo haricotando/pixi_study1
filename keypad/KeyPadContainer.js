@@ -1,4 +1,5 @@
 import { KeyPad } from './KeyPad.js';
+import { dataProvider } from '../DataProvider.js';
 // import AlignHelper from '../helper/AlignHelper.js';
 
 export class KeyPadContainer extends PIXI.Container {
@@ -9,8 +10,6 @@ export class KeyPadContainer extends PIXI.Container {
     ============================================================ */
     constructor() {
         super();
-        this.padSize = 180;
-        
         this.init();
     }
 
@@ -19,7 +18,7 @@ export class KeyPadContainer extends PIXI.Container {
         // 背景・マージン作成
         let background = new PIXI.Graphics();
         background.beginFill(0xFF0000);
-        background.drawRect(0, 0, 2, this.padSize*2 + 30);
+        background.drawRect(0, 0, 2, dataProvider.data.padSize*2 + 30);
         background.endFill();
         this.addChild(background);
 
@@ -28,14 +27,14 @@ export class KeyPadContainer extends PIXI.Container {
         let valueIndex = 0;
         for(let i=0; i<10; i++){
             
-            let pad = new KeyPad(this.padSize, i==9?0:i+1);
+            let pad = new KeyPad(dataProvider.data.padSize, i==9?0:i+1);
             this.addChild(pad);
             // 配置調整
             
-            pad.x = i*(this.padSize + padMargin);
+            pad.x = i*(dataProvider.data.padSize + padMargin);
             if(i>4){
-                pad.y = this.padSize + padMargin;
-                pad.x = (i-5)*(this.padSize + padMargin);
+                pad.y = dataProvider.data.padSize + padMargin;
+                pad.x = (i-5)*(dataProvider.data.padSize + padMargin);
             }
             this.keyPadList.push(pad);
         }

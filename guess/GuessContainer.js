@@ -1,3 +1,5 @@
+import { dataProvider } from '../DataProvider.js';
+
 export class GuessContainer extends PIXI.Container {
     static background;
     static guessText;
@@ -8,7 +10,6 @@ export class GuessContainer extends PIXI.Container {
     ============================================================ */
     constructor() {
         super();
-        this.padSize = 180;
         this.init();
     }
 
@@ -16,14 +17,14 @@ export class GuessContainer extends PIXI.Container {
         // 背景・マージン作成
         let background = new PIXI.Graphics();
         background.beginFill(0xFFFF00);
-        background.drawRect(0, 0, 10, this.padSize + 30);
+        background.drawRect(0, 0, 10, dataProvider.data.padSize + 30);
         background.endFill();
         this.addChild(background);
         
         // GuessContainer
         this.style = new PIXI.TextStyle({
             fontFamily:     'Inter',
-            fontSize:       this.padSize * 0.8,
+            fontSize:       dataProvider.data.padSize * 0.8,
             fontWeight:     100,
             fill:           'black',
         });
