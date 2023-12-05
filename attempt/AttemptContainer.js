@@ -10,7 +10,6 @@ export class AttemptContainer extends PIXI.Container {
     }
 
     init(){
-        console.log('attttt')
         // 背景・マージン作成
         let background = new PIXI.Graphics();
         background.beginFill(0xFFAA00);
@@ -21,7 +20,6 @@ export class AttemptContainer extends PIXI.Container {
 
     addAttemptLog(guess, result){
         let container = new PIXI.Container();
-
         // Guess
         let guessStyle = new PIXI.TextStyle({
             fontFamily:     'Inter',
@@ -38,6 +36,12 @@ export class AttemptContainer extends PIXI.Container {
 
         this.addChild(container);
         this.attemptCount ++;
-        container.y = this.attemptCount * 100;
+
+        container.y = 1000;
+        gsap.to(container, {y: this.attemptCount * 100, duration: 0.3, ease: 'elastic.out(1,1)'});
+        container.scale.x = 0.1;
+        container.scale.y = 0.1;
+        gsap.to(container.scale, {x:1, y: 1, duration: 0.3, ease: 'elastic.out(1,1)'});
+        // container.y = this.attemptCount * 100;
     }    
 }

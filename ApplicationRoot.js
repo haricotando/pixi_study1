@@ -88,7 +88,6 @@ export class ApplicationRoot extends PIXI.Container {
 
             this.guessResetHandler();
             this.updateGuessContainer();
-            // console.log(`Attempt ${this.attempt}: ${guessAsText} → ${feedback}`);
             this.attemptContainer.addAttemptLog(guessAsText, feedback);
         }
     }
