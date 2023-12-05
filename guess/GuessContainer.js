@@ -15,11 +15,11 @@ export class GuessContainer extends PIXI.Container {
 
     init(){
         // 背景・マージン作成
-        let background = new PIXI.Graphics();
-        background.beginFill(0xFFFF00);
-        background.drawRect(0, 0, 10, dataProvider.data.padSize + 30);
-        background.endFill();
-        this.addChild(background);
+        // let background = new PIXI.Graphics();
+        // background.beginFill(0xFFFF00);
+        // background.drawRect(0, 0, 10, dataProvider.data.padSize + 30);
+        // background.endFill();
+        // this.addChild(background);
         
         // GuessContainer
         this.style = new PIXI.TextStyle({
@@ -29,6 +29,7 @@ export class GuessContainer extends PIXI.Container {
             fill:           'black',
         });
         this.number = new PIXI.Text('****', this.style);
+        this.number.anchor.set(0, 0)
         this.addChild(this.number);
 
         // BackSpace
@@ -40,7 +41,7 @@ export class GuessContainer extends PIXI.Container {
         
         let btnLabel = new PIXI.Text('X', this.style);
         this.btnBackspace.addChild(btnLabel);
-        this.btnBackspace.x = -140;
+        this.btnBackspace.x = -150;
         
         this.btnBackspace.on('touchstart', (event) => {
             this.parent.guessResetHandler();
@@ -59,6 +60,11 @@ export class GuessContainer extends PIXI.Container {
         this.btnSubmit.on('touchstart', (event) => {
             this.parent.guessSubmitHandler();
         });
+    }
+
+    onInput(){
+        this.number.y = 100;
+        gsap.to(this.number, {y: 0, duration: 0.25, ease: 'elastic.out(1,0.3)'});
     }
 
     switchBackspace(bool){

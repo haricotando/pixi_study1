@@ -56,6 +56,7 @@ export class ApplicationRoot extends PIXI.Container {
         if(!this.guessContainer.stateBackspace){
             this.guessContainer.switchBackspace(true);
         }
+        this.guessContainer.onInput();
     }
 
     guessSubmitHandler(){
@@ -118,7 +119,7 @@ export class ApplicationRoot extends PIXI.Container {
 
         this.guessContainer.position.set(
             (window.innerWidth - this.guessContainer.width)/2, 
-            window.innerHeight - this.guessContainer.height-350
+            window.innerHeight - this.guessContainer.height-400
             );
 
         this.attemptContainer.position.set(
