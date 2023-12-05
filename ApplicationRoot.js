@@ -73,8 +73,12 @@ export class ApplicationRoot extends PIXI.Container {
             if(isMatch > 0 && isIncluded > 0){
                 feedback = `${isMatch}H / ${isIncluded}B`;
             }else{
-                feedback = isMatch > 0 ? `${isMatch}H` : feedback;
-                feedback = isIncluded > 0 ? `${isIncluded}B` : feedback;
+                if(isMatch == 0 && isIncluded == 0){
+                    feedback = 'No match'
+                }else{
+                    feedback = isMatch > 0 ? `${isMatch}H` : feedback;
+                    feedback = isIncluded > 0 ? `${isIncluded}B` : feedback;
+                }
             }
 
             this.guessResetHandler();
