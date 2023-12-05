@@ -49,8 +49,12 @@ export class ApplicationRoot extends PIXI.Container {
             this.updateGuessContainer();
             if(this.guessList.length == 4){
                 console.log('Limit reach')
+                this.guessContainer.switchSubmit(true);
                 this.keyPadContainer.inactiveByLimit4();
             }
+        }
+        if(!this.guessContainer.stateBackspace){
+            this.guessContainer.switchBackspace(true);
         }
     }
 
@@ -74,7 +78,7 @@ export class ApplicationRoot extends PIXI.Container {
                 feedback = `${isMatch}H / ${isIncluded}B`;
             }else{
                 if(isMatch == 0 && isIncluded == 0){
-                    feedback = 'No match'
+                    feedback = 'No match';
                 }else{
                     feedback = isMatch > 0 ? `${isMatch}H` : feedback;
                     feedback = isIncluded > 0 ? `${isIncluded}B` : feedback;
@@ -91,6 +95,8 @@ export class ApplicationRoot extends PIXI.Container {
     guessResetHandler(){
         this.guessList = [];
         this.keyPadContainer.resetKeyPads();
+        this.guessContainer.switchSubmit(false);
+        this.guessContainer.switchBackspace(false);
         this.updateGuessContainer();
     }
     
