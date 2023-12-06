@@ -1,11 +1,13 @@
 import { KeyPadContainer } from './keypad/KeyPadContainer.js';
 import { GuessContainer } from './guess/GuessContainer.js';
 import { AttemptContainer } from './attempt/AttemptContainer.js';
+import { StartScreen } from './StartScreen.js';
 // import AlignHelper from './helper/AlignHelper.js';
 
 export class ApplicationRoot extends PIXI.Container {
     static keyPadContainer;
     static guessContainer;
+    static startScreen;
     static timeoutID;
     static attempt;
     //
@@ -35,6 +37,9 @@ export class ApplicationRoot extends PIXI.Container {
         // ----------- Attempt
         this.attemptContainer = new AttemptContainer();
         this.addChild(this.attemptContainer);
+
+        this.startScreen = new StartScreen();
+        this.addChild(this.startScreen);
         
         window.addEventListener('resize', this.resizeHandler.bind(this));
         this.resizeHandler();

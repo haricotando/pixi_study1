@@ -11,7 +11,7 @@ let timeoutID = 0;
 ------------------------------------------------------------ */
 WebFont.load({
     google: {
-      families: ['Inter:100,200', 'Material Icons'],
+      families: ['Inter:100,200'],
     },
     
     active: () => {
