@@ -10,8 +10,6 @@ export class KeyPad extends PIXI.Container {
     constructor(padSize, number) {
         super();
         this.number = number
-        this.container = new PIXI.Container();
-        this.addChild(this.container);
         
         // 背景作成
         this.backgroundContainer = new PIXI.Sprite();
@@ -39,18 +37,17 @@ export class KeyPad extends PIXI.Container {
         this.numberText.x = padSize / 2;
         this.numberText.y = padSize / 2;
         this.numberText.alpha = 0.5;
-        this.container.addChild(this.numberText);
+        this.addChild(this.numberText);
         // ボタンイベント
-        this.container.interactive = true;
-        this.container.on('touchstart', (event) => {
+        this.interactive = true;
+        this.on('touchstart', (event) => {
             this.clickHandler(event);
         });
-        // this.container.on('click', this.clickHandler.bind(this));
     }
 
     clickHandler(event){
         this.parent.parent.onGuessHandler(this.number);
-        this.container.interactive = false;
+        this.interactive = false;
         this.style.fontWeight = 200;
         this.numberText.scale.x = 1.5;
         this.numberText.scale.y = 1.5;
@@ -65,7 +62,7 @@ export class KeyPad extends PIXI.Container {
     }
 
     mute(){
-        this.container.interactive = false;
+        this.interactive = false;
         gsap.killTweensOf(this.numberText);
         gsap.killTweensOf(this.backgroundContainer);
         this.numberText.alpha = 0.1;
@@ -73,8 +70,7 @@ export class KeyPad extends PIXI.Container {
 
     
     revibe(){
-        console.log('revibe');
-        this.container.interactive = true;
+        this.interactive = true;
         this.style.fontWeight = 100;
         gsap.killTweensOf(this.numberText);
         gsap.killTweensOf(this.backgroundContainer);
@@ -85,8 +81,6 @@ export class KeyPad extends PIXI.Container {
         this.backgroundContainer.scale.x = 1;
         this.backgroundContainer.scale.y = 1;
 
-        // this.style.fontWeight = 100;
-        // this.numberText.scale(1, 1);
     }
 
 }
