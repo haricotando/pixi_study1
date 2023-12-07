@@ -37,7 +37,8 @@ export class ApplicationRoot extends PIXI.Container {
         // ----------- Attempt
         this.attemptContainer = new AttemptContainer();
         this.addChild(this.attemptContainer);
-
+        
+        // ----------- StartSceen
         this.startScreen = new StartScreen();
         this.addChild(this.startScreen);
         
@@ -130,6 +131,10 @@ export class ApplicationRoot extends PIXI.Container {
             (window.innerWidth - this.attemptContainer.width)/2, 
             0
             );
+        // this.startScreen.position.set(
+        //     (window.innerWidth - this.startScreen.width)/2, 
+        //     0
+        //     );
     }
 
 /* ==================================================

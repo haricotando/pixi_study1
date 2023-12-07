@@ -10,7 +10,6 @@ export class KeyPadContainer extends PIXI.Container {
     ============================================================ */
     constructor() {
         super();
-        this.init();
     }
 
     init(){

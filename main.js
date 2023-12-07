@@ -11,7 +11,7 @@ let timeoutID = 0;
 ------------------------------------------------------------ */
 WebFont.load({
     google: {
-      families: ['Inter:100,200'],
+      families: ['Inter:100,300,600'],
     },
     
     active: () => {
