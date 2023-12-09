@@ -1,22 +1,33 @@
 class AlignHelper {
     
+    /*
+
+    AlignHelper.center(parent, this);
+
+    */
+
     static hello(){
         console.log('hello');
     }
 
     static horizontalCenter(parent, target){
-        target.x = Math.round((parent.width - target.width) / 2);
+        let parentWidth = parent == window ? window.innerWidth : parent.width;
+        target.x = Math.round((parentWidth - target.width) / 2);
     }
-
+    
     static verticalCenter(parent, target){
         target.y = Math.round((parent.height - target.height) / 2);
     }
     
     static verticalBottom(parent, target){
-        target.y = Math.round(parent.height - target.height);
+        let parentHeight = parent == window ? window.innerHeight : parent.height;
+        target.y = Math.round(parentHeight - target.height);
     }
-
+    
+    //
     static top(parent, target){
+        this.horizontalCenter(parent, target);
+        target.y = 0;
         
     }
 
@@ -28,6 +39,27 @@ class AlignHelper {
     static bottom(parent, target){
         this.horizontalCenter(parent, target);
         this.verticalBottom(parent, target);
+    }
+
+    static lt(parent, target){
+    }
+
+    static rt(parent, target){
+    }
+
+    static left(parent, target){
+        target.x = 0;
+    }
+
+    static right(parent, target){
+        let parentWidth = parent == window ? window.innerWidth : parent.width;
+        target.x = parentWidth;
+    }
+
+    static lb(parent, target){
+    }
+
+    static rb(parent, target){
     }
 }
 
