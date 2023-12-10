@@ -1,9 +1,8 @@
 import { dataProvider } from '../DataProvider.js';
-import AlignHelper from '../helper/AlignHelper.js';
+// import AlignHelper from '../helper/AlignHelper.js';
 
 export class GuessContainer extends PIXI.Container {
-    static background;
-    static guessText;
+    // static guessText;
     static btnBackspace;
     static stateBackspace;
     /* ============================================================
@@ -11,75 +10,165 @@ export class GuessContainer extends PIXI.Container {
     ============================================================ */
     constructor() {
         super();
+        this.btnPosY = 350;
         this.init();
     }
 
     init(){
-        // 背景・マージン作成
-        // let background = new PIXI.Graphics();
-        // background.beginFill(0xFFFF00);
-        // background.drawRect(0, 0, 10, dataProvider.data.padSize + 30);
-        // background.endFill();
-        // this.addChild(background);
+        // guide background
+        let bg = new PIXI.Graphics();
+        bg.beginFill(0xFFFF00);
+        bg.drawRect(0, 0, 100, 100);
+        bg.endFill();
+        this.addChild(bg);
         
-        // GuessContainer
-        this.style = new PIXI.TextStyle({
+        // Guess text
+        this.txtStyleGuess = new PIXI.TextStyle({
             fontFamily:     'Inter',
-            fontSize:       dataProvider.data.padSize * 0.8,
-            fontWeight:     100,
+            fontSize:       dataProvider.data.padSize * 1,
+            fontWeight:     200,
             fill:           'black',
         });
-        this.number = new PIXI.Text('****', this.style);
-        this.number.anchor.set(0, 0)
-        this.addChild(this.number);
 
-        // BackSpace
-        this.btnBackspace = new PIXI.Sprite();
-        this.addChild(this.btnBackspace);
-        this.btnBackspace.interactive = true;
-        this.btnBackspace.visible = false;
-        this.stateBackspace = false;
+        // Text
+        this.txtGuess = new PIXI.Text('****', this.txtStyleGuess);
+        this.txtGuess.x = window.innerWidth / 2;
+        this.txtGuess.anchor.set(0.5);
+        this.txtGuess.visible = false;
+        this.addChild(this.txtGuess);
+        this.y = window.innerHeight - 520;
         
-        let btnLabel = new PIXI.Text('X', this.style);
-        this.btnBackspace.addChild(btnLabel);
-        this.btnBackspace.x = -150;
-        
-        this.btnBackspace.on('touchstart', (event) => {
-            this.parent.guessResetHandler();
+       // Guess text
+       this.txtStyleSubmit = new PIXI.TextStyle({
+           fontFamily:     'Inter',
+           fontSize:       dataProvider.data.padSize * 2,
+           fontWeight:     100,
+           fill:           'black',
         });
         
         // Submit
-        this.btnSubmit = new PIXI.Sprite();
+        this.btnSubmit = new PIXI.Text('↑', this.txtStyleSubmit);
         this.addChild(this.btnSubmit);
         this.btnSubmit.interactive = true;
+        this.btnSubmit.anchor.set(0.5);
+        this.btnSubmit.x = window.innerWidth / 2 + 200;
+        this.btnSubmit.y = this.btnPosY;
         this.btnSubmit.visible = false;
-
-        let btnLabelSubmit = new PIXI.Text('↑', this.style);
-        this.btnSubmit.addChild(btnLabelSubmit);
-        this.btnSubmit.x = 400;
         
         this.btnSubmit.on('touchstart', (event) => {
+            this.btnSubmit.interactive = false;
+            this.btnSubmit.scale.x = 1.3;
+            this.btnSubmit.scale.y = 1.3;
+            gsap.to(this.btnSubmit.scale, {x:0.9, y:0.9, duration:0.2});
+            gsap.timeline().to(this.btnSubmit, {alpha:0, duration:0.2})
+                .call(() =>{
+                    this.btnSubmit.visible = false;
+                    this.btnDelete.visible = false;
+                });
             this.parent.guessSubmitHandler();
         });
 
+        //Delete
+        this.btnDelete = new PIXI.Text('X', this.txtStyleSubmit);
+        this.addChild(this.btnDelete);
+        this.btnDelete.interactive = true;
+        this.btnDelete.anchor.set(0.5);
+        this.btnDelete.x = window.innerWidth / 2 - 200;
+        this.btnDelete.y = this.btnPosY;
+        this.btnDelete.visible = false;
 
-        this.pivot.set(this.width / 2, this.height / 2);
-        this.x = window.innerWidth/2;
-        let destY = window.innerHeight - this.height/2 - 30;
-        this.y = window.innerHeight - 500;
+        this.btnDelete.on('touchstart', (event) => {
+            this.btnDelete.interactive = false;
+            this.btnDelete.scale.x = 1.3;
+            this.btnDelete.scale.y = 1.3;
+            gsap.timeline().to(this.btnDelete.scale, {x:0.9, y:0.9, duration:0.2})
+                .call(() =>{
+                    this.btnSubmit.visible = false;
+                    this.btnDelete.visible = false;
+                });
+            // GuessText
+            let tgPos = window.innerWidth/2;
+            gsap.timeline().to(this.txtGuess, {x:tgPos-50, duration:0.05}).to(this.txtGuess, {x:tgPos+50, duration:0.05}).to(this.txtGuess, {x:tgPos, duration:0.05})
+            this.txtGuess.text = '****';
+            this.txtStyleGuess.letterSpacing = 100;
+            gsap.timeline().to(this.txtStyleGuess, {letterSpacing:0, duration:0.2});
+            //
+            this.parent.guessResetHandler();
+        });   
+    }
+    
+    start(){
+        this.txtGuess.visible = true;
+        this.txtGuess.y = 150;
+        this.txtGuess.alpha = 0;
+        let submitPosX = (window.innerWidth/2 + this.txtGuess.width) + (window.innerWidth/2-this.txtGuess.width)/2
+        gsap.timeline().to(this.txtGuess, {alpha:1, y:0, duration:0.3, ease:'power1.out'}, '+=0.6');
+        this.txtStyleGuess.letterSpacing = -50;
+        gsap.timeline().to(this.txtStyleGuess, { letterSpacing: 0, duration:0.5, ease: 'back'}, '+=0.6')
     }
 
-    onInput(){
-        this.number.y = 100;
-        gsap.to(this.number, {y: 0, duration: 0.25, ease: 'elastic.out(1,0.3)'});
+    submitAnimation(){
+        gsap.to(this.txtGuess.scale, {x:0.85, y:0.85, duration:0.2});
+        gsap.to(this.txtGuess, {y:-250, duration:0.2});
+        gsap.timeline().to(this.txtGuess, {alpha:0, duration:0.2, ease:'power1.in'})
+        .call(()=>{
+            gsap.timeline().to(this.txtGuess, {alpha:1, duration:0.2})
+            this.txtStyleGuess.letterSpacing = -50;
+            this.txtGuess.text = '****';
+            this.txtGuess.y = 150;
+            gsap.timeline().to(this.txtGuess.scale, {x:1, y:1, duration:0.15});
+            gsap.timeline().to(this.txtGuess, {y:0, duration:0.2, ease:'power4.out'});
+            gsap.timeline().to(this.txtStyleGuess, {letterSpacing:0, duration:0.15, ease:'back'})
+            })
+
     }
 
-    switchBackspace(bool){
-        this.btnBackspace.visible = bool;
-        this.btnBackspace.stateBackspace = bool;
+    updateGuess(txt){
+        this.txtGuess.text = txt;
+        this.txtGuess.x = window.innerWidth / 2;
+        gsap.killTweensOf(this.txtGuess);
+        this.txtGuess.y = 50;
+        gsap.to(this.txtGuess, {y: 0, duration: 0.5, ease: 'elastic.out(1,0.3)'});
+        gsap.killTweensOf(this.txtStyleGuess);
+        this.txtStyleGuess.letterSpacing = -50;
+        gsap.to(this.txtStyleGuess, { letterSpacing: 0, duration:0.3, ease: 'back'})
     }
 
-    switchSubmit(bool){
-        this.btnSubmit.visible = bool;
+    showSubmit(){
+        this.alpha = 1;
+        // Submit
+        this.btnSubmit.interactive = false;
+        this.btnSubmit.scale.x = 0.1;
+        this.btnSubmit.scale.y = 0.1;
+        this.btnSubmit.alpha = 1;
+        this.btnSubmit.y = this.btnPosY+300;
+        this.btnSubmit.visible = true;
+        gsap.to(this.btnSubmit, {y:this.btnPosY, duration:0.3, ease:'back'})
+        gsap.timeline().to(this.btnSubmit.scale, {x:1, y:1, duration:0.5, ease:'back'})
+            .call(()=>{
+                this.btnSubmit.interactive = true;
+            });
+        // Delete
+        this.btnDelete.interactive = false;
+        this.btnDelete.scale.x = 0.1;
+        this.btnDelete.scale.y = 0.1;
+        this.btnDelete.alpha = 1;
+        this.btnDelete.y = this.btnPosY+300;
+        this.btnDelete.visible = true;
+        gsap.timeline().to(this.btnDelete, {y:this.btnPosY, duration:0.3, ease:'back'}, '+=0.1')
+        gsap.timeline().to(this.btnDelete.scale, {x:1, y:1, duration:0.5, ease:'back'}, '+=0.1')
+            .call(()=>{
+                this.btnDelete.interactive = true;
+            });
+    }
+
+    reset(){
+        // gsap.to(this, {alpha:0, duration:0.3});
+        this.btnSubmit.interactive = false;
+        // this.btnSubmit.visible = false;
+        
+        this.btnDelete.interactive = false;
+        // this.btnDelete.visible = false;
+
     }
 }

@@ -1,6 +1,6 @@
 import { KeyPadContainer } from './keypad/KeyPadContainer.js';
 import { GuessContainer } from './guess/GuessContainer.js';
-import { AttemptContainer } from './attempt/AttemptContainer.js';
+import { LogContainer } from './log/LogContainer.js';
 import { StartScreen } from './StartScreen.js';
 import AlignHelper from './helper/AlignHelper.js';
 
@@ -18,6 +18,11 @@ export class ApplicationRoot extends PIXI.Container {
     ============================================================ */
     constructor(appScreen) {
         super();
+        // ****************
+        this.debug = false;
+        // this.debug = true;
+        // ****************
+
         this.timeoutID = 0;
         this.attempt = 0;
         this.guessList = [];
@@ -29,48 +34,54 @@ export class ApplicationRoot extends PIXI.Container {
         // ----------- KeyPad
         this.keyPadContainer = new KeyPadContainer();
         this.addChild(this.keyPadContainer);
+        if(this.debug){
+            this.keyPadContainer.start();
+        }
         
         // ----------- Guess
         this.guessContainer = new GuessContainer();
-        // this.addChild(this.guessContainer);
+        this.addChild(this.guessContainer);
+        if(this.debug){
+            this.guessContainer.start();
+        }
 
         // ----------- Attempt
-        this.attemptContainer = new AttemptContainer();
-        this.addChild(this.attemptContainer);
+        this.logContainer = new LogContainer();
+        this.addChild(this.logContainer);
         
         // ----------- StartSceen
         this.startScreen = new StartScreen();
-        this.addChild(this.startScreen);
-        
-        // window.addEventListener('resize', this.resizeHandler.bind(this));
-        // this.resizeHandler();
+        if(!this.debug){
+            this.addChild(this.startScreen);
+        }
     }
-
+    /* ------------------------------------------------------------
+        ゲーム開始のイントロ
+    ------------------------------------------------------------ */
     startGame(){
-        this.keyPadContainer.start()
-        this.addChild(this.keyPadContainer);
-        this.addChild(this.guessContainer);
-        this.addChild(this.attemptContainer);
+        this.keyPadContainer.start();
+        this.guessContainer.start();
     }
-/* ------------------------------------------------------------
-    キーパッドイベント
------------------------------------------------------------- */
+    /* ------------------------------------------------------------
+        キーパッドイベント
+    ------------------------------------------------------------ */
     onGuessHandler(number){
         if(this.guessList.length < 4){
             this.guessList.push(number);
-            this.updateGuessContainer();
             if(this.guessList.length == 4){
-                console.log('Limit reach')
-                this.guessContainer.switchSubmit(true);
                 this.keyPadContainer.inactiveByLimit4();
+                this.guessContainer.showSubmit();
             }
         }
-        if(!this.guessContainer.stateBackspace){
-            this.guessContainer.switchBackspace(true);
+        let output = '';
+        for(let i=0; i<4; i++){
+            output += this.guessList[i] === undefined ? '*' : this.guessList[i];
         }
-        this.guessContainer.onInput();
+        this.guessContainer.updateGuess(output);
     }
-
+    /* ------------------------------------------------------------
+        サブミット
+    ------------------------------------------------------------ */
     guessSubmitHandler(){
         this.attempt ++;
         let guessAsText = this.guessList.join('');
@@ -98,49 +109,20 @@ export class ApplicationRoot extends PIXI.Container {
                 }
             }
 
-            this.guessResetHandler();
-            this.updateGuessContainer();
-            this.attemptContainer.addAttemptLog(guessAsText, feedback);
+            this.logContainer.addAttemptLog(guessAsText, feedback, isMatch == 0 && isIncluded == 0);
+            this.guessList = [];
+            this.keyPadContainer.resetKeyPads();
+            this.guessContainer.reset();
+            this.guessContainer.submitAnimation();
         }
     }
-
+    /* ------------------------------------------------------------
+        DeleteKey
+    ------------------------------------------------------------ */
     guessResetHandler(){
         this.guessList = [];
         this.keyPadContainer.resetKeyPads();
-        this.guessContainer.switchSubmit(false);
-        this.guessContainer.switchBackspace(false);
-        this.updateGuessContainer();
-    }
-    
-    updateGuessContainer(){
-        let output = '';
-        for(let i=0; i<4; i++){
-            output += this.guessList[i] === undefined ? '*' : this.guessList[i];
-        }
-        this.guessContainer.number.text = output;
-    }
-/* ------------------------------------------------------------
-    リサイズイベント
------------------------------------------------------------- */
-    resizeHandler(){
-        // this.keyPadContainer.position.set(
-        //     (window.innerWidth - this.keyPadContainer.width)/2, 
-        //     window.innerHeight - this.keyPadContainer.height
-        //     );
-
-        // this.guessContainer.position.set(
-        //     (window.innerWidth - this.guessContainer.width)/2, 
-        //     window.innerHeight - this.guessContainer.height-400
-        //     );
-
-        // this.attemptContainer.position.set(
-        //     (window.innerWidth - this.attemptContainer.width)/2, 
-        //     0
-        //     );
-        // this.startScreen.position.set(
-        //     (window.innerWidth - this.startScreen.width)/2, 
-        //     0
-        //     );
+        this.guessContainer.reset();
     }
 
 /* ==================================================

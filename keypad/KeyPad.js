@@ -65,7 +65,8 @@ export class KeyPad extends PIXI.Container {
         this.interactive = false;
         gsap.killTweensOf(this.numberText);
         gsap.killTweensOf(this.backgroundContainer);
-        this.numberText.alpha = 0.1;
+        // this.numberText.alpha = 0;
+        // this.backgroundContainer.visible = false;
     }
 
     
@@ -76,7 +77,7 @@ export class KeyPad extends PIXI.Container {
         gsap.killTweensOf(this.backgroundContainer);
         this.numberText.scale.x = 1;
         this.numberText.scale.y = 1;
-        this.numberText.alpha = 0.5;
+        // this.numberText.alpha = 0.5;
         this.backgroundContainer.alpha = 0;
         this.backgroundContainer.scale.x = 1;
         this.backgroundContainer.scale.y = 1;
