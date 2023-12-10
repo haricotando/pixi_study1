@@ -54,6 +54,8 @@ export class ApplicationRoot extends PIXI.Container {
         if(!this.debug){
             this.addChild(this.startScreen);
         }
+
+        this.initBtnInfo();
     }
     /* ------------------------------------------------------------
         ゲーム開始のイントロ
@@ -124,40 +126,88 @@ export class ApplicationRoot extends PIXI.Container {
         this.keyPadContainer.resetKeyPads();
         this.guessContainer.reset();
     }
+    /* ------------------------------------------------------------
+        Info
+    ------------------------------------------------------------ */
+    initBtnInfo(){
+        // iconStyle
+        const style = new PIXI.TextStyle({
+        fontFamily: 'Material Icons',
+        fontSize: 70,
+        fill: 'gray',
+        });
+        
+        // set container
+        let infoContainer = new PIXI.Container();
+        this.addChild(infoContainer);
+        // infoContainer.pivot.set(infoContainer.width/2, infoContainer.height/2);
+        // infoContainer.x = window.innerWidth / 2;
+        // infoContainer.y = window.innerHeight / 2;
 
-/* ==================================================
-  ロジック
-================================================== */
-generateSecretCode() {
-    const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    let secretCode = '';
-    while (secretCode.length < 4) {
-        const randomIndex = Math.floor(Math.random() * digits.length);
-        const digit = digits.splice(randomIndex, 1)[0];
-        secretCode += digit;
+        // background
+        let bg = new PIXI.Graphics();
+        bg.beginFill(0x000000);
+        bg.drawRect(0, 0, window.innerWidth, window.innerHeight);
+        bg.endFill();
+        // bg.pivot.set(bg.width/2, bg.height/2);
+        bg.alpha = 0.1;
+        infoContainer.addChild(bg);
+        infoContainer.visible = false;
+
+        // dialog
+         const dialog = new PIXI.Graphics();
+        dialog.beginFill(0xFFFFFF);
+        dialog.drawRoundedRect(0, 0, 800, 800, 40);
+        dialog.endFill();
+        dialog.pivot.set(400,400);
+        dialog.x = window.innerWidth / 2;
+        dialog.y = window.innerHeight / 2;
+        infoContainer.addChild(dialog);
+
+        const qr = qrcode(0, 'M');
+        qr.addData(window.location.href);
+        qr.make();
+        const qrDataURL = qr.createDataURL(10, 0);
+        const texture = PIXI.Texture.from(qrDataURL);
+        const qrContainer = new PIXI.Sprite(texture);
+        qrContainer.width = 600;
+        qrContainer.height = 600;
+        qrContainer.x = 100;
+        qrContainer.y = 100;
+        dialog.addChild(qrContainer);
+
+        // infoBtn
+        const btnInfo = new PIXI.Text('\ue88e', style);
+        this.addChild(btnInfo);
+        btnInfo.x = window.innerWidth - btnInfo.width -40;
+        btnInfo.y = 40;
+
+        btnInfo.on('touchstart', (event) => {
+            btnInfo.interactive = false;
+            infoContainer.visible = true;
+            bg.interactive = true;
+        });
+        btnInfo.alpha = 0;
+        gsap.timeline().to(btnInfo, {alpha:0, duration:0.1}, '+=4').call(()=>{
+            btnInfo.interactive = true;
+        }).to(btnInfo, {alpha:1, duration:0.3});
+
     }
-    console.log(`SECRET: ${secretCode}`)
-    return secretCode;
-  }
 
-  validGuess(guess){
-    this.attempt ++;
-    // if (this.currentGuess === this.secretCode) {
-    //     alert("Great");
-    // } else {
-    //     let isMatch = '';
-    //     let isIncluded = '';
-    //     for(let i = 0; i< 4; i++){
-    //         if(this.currentGuess[i] === this.secretCode[i]){
-    //             isMatch += "🙆‍♂";
-    //         }else if(this.secretCode.includes(this.currentGuess[i])){
-    //             isIncluded +="🤔";
-    //         }
-    //     }
-    //     let feedback = isMatch + isIncluded;
-    //     console.log(`Attempt ${this.attempt}: ${this.currentGuess} → ${feedback}`);
-    // }
-  }
+    /* ==================================================
+    ロジック
+    ================================================== */
+    generateSecretCode() {
+        const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        let secretCode = '';
+        while (secretCode.length < 4) {
+            const randomIndex = Math.floor(Math.random() * digits.length);
+            const digit = digits.splice(randomIndex, 1)[0];
+            secretCode += digit;
+        }
+        console.log(`SECRET: ${secretCode}`)
+        return secretCode;
+    }
 
     echo(){
     console.log('works');

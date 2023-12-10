@@ -143,11 +143,11 @@ export class StartScreen extends PIXI.Container {
         .to(this.descText, {y:-100, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
         .to(this.instText, {y:-100, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
         
-        gsap.timeline().to(this.circle.scale, {x:60, y:60, duration:0.4})
+        gsap.timeline().to(this.circle.scale, {x:50, y:50, duration:0.4})
             .call(()=>{
                 this.parent.startGame();
             });
-        gsap.timeline().to(this.circle, {y:-2500, duration:1, ease:'power4.inOut'}, '+=0.2')
+        gsap.timeline().to(this.circle, {y:-2500, duration:1, ease:'power4.inOut'}, '+=0.1')
     }
 
     

@@ -10,17 +10,17 @@ export class GuessContainer extends PIXI.Container {
     ============================================================ */
     constructor() {
         super();
-        this.btnPosY = 350;
+        this.btnPosY = 300;
         this.init();
     }
 
     init(){
         // guide background
-        let bg = new PIXI.Graphics();
-        bg.beginFill(0xFFFF00);
-        bg.drawRect(0, 0, 100, 100);
-        bg.endFill();
-        this.addChild(bg);
+        // let bg = new PIXI.Graphics();
+        // bg.beginFill(0xFFFF00);
+        // bg.drawRect(0, 0, 100, 100);
+        // bg.endFill();
+        // this.addChild(bg);
         
         // Guess text
         this.txtStyleGuess = new PIXI.TextStyle({
@@ -41,7 +41,7 @@ export class GuessContainer extends PIXI.Container {
        // Guess text
        this.txtStyleSubmit = new PIXI.TextStyle({
            fontFamily:     'Inter',
-           fontSize:       dataProvider.data.padSize * 2,
+           fontSize:       dataProvider.data.padSize * 1.4,
            fontWeight:     100,
            fill:           'black',
         });
