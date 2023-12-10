@@ -1,4 +1,5 @@
 import { dataProvider } from '../DataProvider.js';
+import AlignHelper from '../helper/AlignHelper.js';
 
 export class GuessContainer extends PIXI.Container {
     static background;
@@ -60,6 +61,12 @@ export class GuessContainer extends PIXI.Container {
         this.btnSubmit.on('touchstart', (event) => {
             this.parent.guessSubmitHandler();
         });
+
+
+        this.pivot.set(this.width / 2, this.height / 2);
+        this.x = window.innerWidth/2;
+        let destY = window.innerHeight - this.height/2 - 30;
+        this.y = window.innerHeight - 500;
     }
 
     onInput(){

@@ -2,7 +2,7 @@ import { KeyPadContainer } from './keypad/KeyPadContainer.js';
 import { GuessContainer } from './guess/GuessContainer.js';
 import { AttemptContainer } from './attempt/AttemptContainer.js';
 import { StartScreen } from './StartScreen.js';
-// import AlignHelper from './helper/AlignHelper.js';
+import AlignHelper from './helper/AlignHelper.js';
 
 export class ApplicationRoot extends PIXI.Container {
     static keyPadContainer;
@@ -32,7 +32,7 @@ export class ApplicationRoot extends PIXI.Container {
         
         // ----------- Guess
         this.guessContainer = new GuessContainer();
-        this.addChild(this.guessContainer);
+        // this.addChild(this.guessContainer);
 
         // ----------- Attempt
         this.attemptContainer = new AttemptContainer();
@@ -42,10 +42,16 @@ export class ApplicationRoot extends PIXI.Container {
         this.startScreen = new StartScreen();
         this.addChild(this.startScreen);
         
-        window.addEventListener('resize', this.resizeHandler.bind(this));
-        this.resizeHandler();
+        // window.addEventListener('resize', this.resizeHandler.bind(this));
+        // this.resizeHandler();
     }
 
+    startGame(){
+        this.keyPadContainer.start()
+        this.addChild(this.keyPadContainer);
+        this.addChild(this.guessContainer);
+        this.addChild(this.attemptContainer);
+    }
 /* ------------------------------------------------------------
     キーパッドイベント
 ------------------------------------------------------------ */
@@ -117,20 +123,20 @@ export class ApplicationRoot extends PIXI.Container {
     リサイズイベント
 ------------------------------------------------------------ */
     resizeHandler(){
-        this.keyPadContainer.position.set(
-            (window.innerWidth - this.keyPadContainer.width)/2, 
-            window.innerHeight - this.keyPadContainer.height
-            );
+        // this.keyPadContainer.position.set(
+        //     (window.innerWidth - this.keyPadContainer.width)/2, 
+        //     window.innerHeight - this.keyPadContainer.height
+        //     );
 
-        this.guessContainer.position.set(
-            (window.innerWidth - this.guessContainer.width)/2, 
-            window.innerHeight - this.guessContainer.height-400
-            );
+        // this.guessContainer.position.set(
+        //     (window.innerWidth - this.guessContainer.width)/2, 
+        //     window.innerHeight - this.guessContainer.height-400
+        //     );
 
-        this.attemptContainer.position.set(
-            (window.innerWidth - this.attemptContainer.width)/2, 
-            0
-            );
+        // this.attemptContainer.position.set(
+        //     (window.innerWidth - this.attemptContainer.width)/2, 
+        //     0
+        //     );
         // this.startScreen.position.set(
         //     (window.innerWidth - this.startScreen.width)/2, 
         //     0

@@ -1,3 +1,5 @@
+import AlignHelper from '../helper/AlignHelper.js';
+
 export class AttemptContainer extends PIXI.Container {
     static attemptCount;
     /* ============================================================
@@ -13,9 +15,14 @@ export class AttemptContainer extends PIXI.Container {
         // 背景・マージン作成
         let background = new PIXI.Graphics();
         background.beginFill(0xFFAA00);
-        background.drawRect(0, 0, 20, 20);
+        background.drawRect(0, 0, 10, 10);
         background.endFill();
         this.addChild(background);
+
+        this.pivot.set(this.width / 2, this.height / 2);
+        this.x = window.innerWidth/2;
+        let destY = window.innerHeight - this.height/2 - 30;
+        // this.y = window.innerHeight + 500;
     }
 
     addAttemptLog(guess, result){

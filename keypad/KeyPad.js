@@ -36,7 +36,7 @@ export class KeyPad extends PIXI.Container {
         this.numberText.anchor.set(0.5);
         this.numberText.x = padSize / 2;
         this.numberText.y = padSize / 2;
-        this.numberText.alpha = 0.5;
+        // this.numberText.alpha = 0.5;
         this.addChild(this.numberText);
         // ボタンイベント
         this.interactive = true;
