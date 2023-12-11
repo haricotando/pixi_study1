@@ -139,9 +139,9 @@ export class StartScreen extends PIXI.Container {
         this.circle.y = 500;
         this.circle.alpha =0;
         gsap.to(this.circle, {alpha:1, duration:0.4});
-        gsap.timeline().to(this.titleText, {y:-100, alpha:0, duration:0.3, ease:'power1.in'})
-        .to(this.descText, {y:-100, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
-        .to(this.instText, {y:-100, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
+        gsap.timeline().to(this.titleText, {y:this.titleText.y-200, alpha:0, duration:0.3, ease:'power1.in'})
+        .to(this.descText, {y:this.descText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
+        .to(this.instText, {y:this.instText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
         
         gsap.timeline().to(this.circle.scale, {x:50, y:50, duration:0.4})
             .call(()=>{
