@@ -15,13 +15,6 @@ export class GuessContainer extends PIXI.Container {
     }
 
     init(){
-        // guide background
-        // let bg = new PIXI.Graphics();
-        // bg.beginFill(0xFFFF00);
-        // bg.drawRect(0, 0, 100, 100);
-        // bg.endFill();
-        // this.addChild(bg);
-        
         // Guess text
         this.txtStyleGuess = new PIXI.TextStyle({
             fontFamily:     'Inter',
@@ -125,8 +118,8 @@ export class GuessContainer extends PIXI.Container {
 
     updateGuess(txt){
         this.txtGuess.text = txt;
-        this.txtGuess.x = window.innerWidth / 2;
         gsap.killTweensOf(this.txtGuess);
+        this.txtGuess.x = window.innerWidth / 2;
         this.txtGuess.y = 50;
         gsap.to(this.txtGuess, {y: 0, duration: 0.5, ease: 'elastic.out(1,0.3)'});
         gsap.killTweensOf(this.txtStyleGuess);
@@ -160,6 +153,19 @@ export class GuessContainer extends PIXI.Container {
             .call(()=>{
                 this.btnDelete.interactive = true;
             });
+    }
+
+    matchRainbow(){
+        gsap.timeline()
+            .to(this.txtStyleGuess, {duration:0.1, fill:'yellow', ease:'steps(1)'})
+            .to(this.txtStyleGuess, {duration:0.1, fill:'purple', ease:'steps(1)'})
+            .to(this.txtStyleGuess, {duration:0.1, fill:'blue', ease:'steps(1)'})
+            .to(this.txtStyleGuess, {duration:0.2, fill:'cyan'})
+            .to(this.txtStyleGuess, {duration:0.2, fill:'black'})
+        gsap.timeline().to(this.txtStyleGuess, {letterSpacing:100, duration:0.1})
+            .to(this.txtStyleGuess, {letterSpacing:0, duration:0.4, ease:'back'});
+        gsap.timeline().to(this.txtGuess.scale, {x:1.2, y:1.2, duration:1.2, ease:'back'})
+            .to*(this.txtGuess.scale, {x:1, y:1, duration:0.3, ease:'expo'})
     }
 
     reset(){

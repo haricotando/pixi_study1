@@ -11,7 +11,6 @@ export class ApplicationRoot extends PIXI.Container {
     static startScreen;
     static timeoutID;
     static attempt;
-    //
     static guessList;
 
     /* ============================================================
@@ -21,7 +20,7 @@ export class ApplicationRoot extends PIXI.Container {
         super();
         // ****************
         this.debug = false;
-        this.debug = true;
+        // this.debug = true;
         // ****************
 
         this.timeoutID = 0;
