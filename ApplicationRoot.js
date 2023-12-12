@@ -1,26 +1,45 @@
-import { dataProvider } from '../DataProvider.js';
+import { dataProvider } from './DataProvider.js';
+import { InputContainer } from './InputContainer.js';
 import { StartScreen } from './StartScreen.js';
+// import { InputContainer } from './InputContainer.js';
 
 export class ApplicationRoot extends PIXI.Container {
 
     /* ============================================================
-        Constructor
+        constructor
     ============================================================ */
     constructor(appScreen) {
         super();
 
+        this.generateSecretCode();
         this.initStartScreen();
- 
+        this.initInputContainer();
     }
 
+    /* ------------------------------------------------------------
+        StartScreen
+    ------------------------------------------------------------ */
     initStartScreen(){
         if(!dataProvider.data.debug){
             this.startScreen = new StartScreen();
             this.addChild(this.startScreen);
         }
     }
+
+    /* ------------------------------------------------------------
+        UI/Input - Keypads, Guess, Submit, Delete
+    ------------------------------------------------------------ */
+    initInputContainer(){
+        this.inputContainer = new InputContainer();
+        this.addChild(this.inputContainer);
+        if(dataProvider.data.debug){
+            this.inputContainer.start();
+        }
+    }
+
     startGame(){
-        console.log('start');
+        this.inputContainer.start();
+        // this.infoContainer.start();
         // this.keyPadContainer.start();
         // this.guessContainer.start();
     }
@@ -157,8 +176,9 @@ export class ApplicationRoot extends PIXI.Container {
             const digit = digits.splice(randomIndex, 1)[0];
             secretCode += digit;
         }
+        dataProvider.data.secret = secretCode;
         console.log(`SECRET: ${secretCode}`)
-        return secretCode;
+        // return secretCode;
     }
 
     echo(){

@@ -11,11 +11,38 @@ class AlignHelper {
         console.log('hello');
     }
 
+    /* ------------------------------------------------------------
+        windowベースのセンタリングの類
+    ------------------------------------------------------------ */
+    // ど真ん中
     static centerWindow(target){
+        this.horizontalCenterWindow(target);
+        this.verticalCenterWindow(target);
+    }
+    // 横で真ん中
+    static horizontalCenterWindow(target){
         target.x = window.innerWidth / 2;
+    }
+    // horizontal, vertical どっちがxでyか忘れる気がするのでショートカット
+    static xCenterWindow(target){
+        this.horizontalCenterWindow(target);
+    }
+    
+    // 縦で真ん中
+    static verticalCenterWindow(target){
         target.y = window.innerHeight / 2;
     }
+    // horizontal, vertical どっちがxでyか忘れる気がするのでショートカット
+    static yCenterWindow(target){
+        this.verticalCenterWindow(target);
+    }
 
+    /* ------------------------------------------------------------
+        windowベースのどこか揃え
+    ------------------------------------------------------------ */
+    static bottomWindow(target){
+        target.y = window.innerHeight;
+    }
     // static horizontalCenter(parent, target){
     //     let parentWidth = parent == window ? window.innerWidth : parent.width;
     //     target.x = Math.round((parentWidth - target.width) / 2);

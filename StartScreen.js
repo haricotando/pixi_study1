@@ -3,7 +3,7 @@ import GraphicsHelper from './helper/GraphicsHelper.js';
 
 export class StartScreen extends PIXI.Container {
     /* ============================================================
-        Constructor
+        constructor
     ============================================================ */
     constructor() {
         super();
@@ -11,7 +11,7 @@ export class StartScreen extends PIXI.Container {
     }
 
     /* ------------------------------------------------------------
-        Init
+        init
     ------------------------------------------------------------ */
     init(){
         AlignHelper.centerWindow(this);
@@ -115,7 +115,7 @@ export class StartScreen extends PIXI.Container {
     }
     
     /* ------------------------------------------------------------
-        Init
+        readyToDie
     ------------------------------------------------------------ */
     readyToDie(){
         this.startBtn.scale.set(1.3);

@@ -1,7 +1,8 @@
 export const dataProvider = {
     data: {
         padSize: 180,
-        debug: false,
+        // debug: true,
+        secret: '',
     },
 };
 
