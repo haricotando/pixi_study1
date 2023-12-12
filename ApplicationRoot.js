@@ -1,62 +1,43 @@
-import { KeyPadContainer } from './keypad/KeyPadContainer.js';
-import { GuessContainer } from './guess/GuessContainer.js';
-import { LogContainer } from './log/LogContainer.js';
+import { dataProvider } from '../DataProvider.js';
 import { StartScreen } from './StartScreen.js';
-import AlignHelper from './helper/AlignHelper.js';
-import { InfoContainer } from './InfoContainer.js';
 
 export class ApplicationRoot extends PIXI.Container {
-    static keyPadContainer;
-    static guessContainer;
-    static startScreen;
-    static timeoutID;
-    static attempt;
-    static guessList;
 
     /* ============================================================
         Constructor
     ============================================================ */
     constructor(appScreen) {
         super();
-        // ****************
-        this.debug = false;
-        // this.debug = true;
-        // ****************
 
-        this.timeoutID = 0;
-        this.attempt = 0;
-        this.guessList = [];
+        this.initStartScreen();
+ 
+    }
 
-        // ----------- Logic
-        this.secretCode = this.generateSecretCode();
-        
-        // 
-        // ----------- KeyPad
-        this.keyPadContainer = new KeyPadContainer();
-        this.addChild(this.keyPadContainer);
-        if(this.debug){
-            this.keyPadContainer.start();
-        }
-        
-        // ----------- Guess
-        this.guessContainer = new GuessContainer();
-        this.addChild(this.guessContainer);
-        if(this.debug){
-            this.guessContainer.start();
-        }
-
-        // ----------- Attempt
-        this.logContainer = new LogContainer();
-        this.addChild(this.logContainer);
-        
-        // ----------- StartSceen
-        this.startScreen = new StartScreen();
-        if(!this.debug){
+    initStartScreen(){
+        if(!dataProvider.data.debug){
+            this.startScreen = new StartScreen();
             this.addChild(this.startScreen);
         }
-
-        this.initBtnInfo();
     }
+    startGame(){
+        console.log('start');
+        // this.keyPadContainer.start();
+        // this.guessContainer.start();
+    }
+
+
+
+
+
+
+
+
+    // ここから上が最適化済み
+
+
+
+
+
 
     initBtnInfo(){
         const style = new PIXI.TextStyle({
@@ -89,10 +70,10 @@ export class ApplicationRoot extends PIXI.Container {
     /* ------------------------------------------------------------
         ゲーム開始のイントロ
     ------------------------------------------------------------ */
-    startGame(){
-        this.keyPadContainer.start();
-        this.guessContainer.start();
-    }
+    // startGame(){
+    //     this.keyPadContainer.start();
+    //     this.guessContainer.start();
+    // }
     /* ------------------------------------------------------------
         キーパッドイベント
     ------------------------------------------------------------ */

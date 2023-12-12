@@ -1,4 +1,5 @@
 import AlignHelper from './helper/AlignHelper.js';
+import GraphicsHelper from './helper/GraphicsHelper.js';
 
 export class StartScreen extends PIXI.Container {
     /* ============================================================
@@ -6,34 +7,32 @@ export class StartScreen extends PIXI.Container {
     ============================================================ */
     constructor() {
         super();
+        this.init();
+    }
 
-        this.x = window.innerWidth / 2;
-        this.y = window.innerHeight / 2;
-
-        // -----background
-        this.background = new PIXI.Graphics();
-        this.background.lineStyle(8, 0x000000);
-        this.background.beginFill(0xFFFFFF);
-        this.background.drawRect(-300, -150, 600, 300);
-        this.background.endFill()
-
-        // -----backgroundCointainer
-        this.backgroundContainer = new PIXI.Sprite();
-        this.backgroundContainer.addChild(this.background);
-        this.addChild(this.backgroundContainer);
-
-        this.backgroundContainer.scale.x = 4;
-        this.backgroundContainer.scale.y = 4;
-        this.backgroundContainer.rotation = 1.2;
-        this.backgroundContainer.alpha = 0;
-
-        gsap.timeline().to(this.backgroundContainer, {alpha:1, duration:2, ease:'none'}, '+=0.5').to(this.backgroundContainer, {alpha:0, duration:2, ease:'expo'});
-        gsap.timeline().to(this.backgroundContainer.scale, {x:1, y:1, duration:5, ease:'power4.out'});
-        gsap.to(this.backgroundContainer, {rotation:-0.4, duration:7, ease:'power4.out'})
-
-        /* ------------------------------------------------------------
-            タイトルテキスト
-        ------------------------------------------------------------ */
+    /* ------------------------------------------------------------
+        Init
+    ------------------------------------------------------------ */
+    init(){
+        AlignHelper.centerWindow(this);
+        /*
+            ===== Background =====
+        */
+        this.background = GraphicsHelper.exDrawRect(-300, -150, 600, 300, 0xFFFFFF, {lineWidth:8, lineColor:0x000000});
+        
+        this.background.scale.set(4);
+        this.background.rotation = 1.2;
+        this.background.alpha = 0;
+        this.addChild(this.background);
+        
+        gsap.timeline()
+        .to(this.background, {alpha:1, duration:2, ease:'none'}, '+=0.5')
+        .to(this.background, {alpha:0, duration:2, ease:'expo'});
+        gsap.to(this.background.scale, {x:1, y:1, duration:5, ease:'power4.out'});
+        gsap.to(this.background, {rotation:-0.4, duration:7, ease:'power4.out'});
+        /*
+            ===== Title =====
+        */
         this.titleStyle = new PIXI.TextStyle({
             fontFamily:     'Inter',
             fontSize:       100,
@@ -43,43 +42,38 @@ export class StartScreen extends PIXI.Container {
         });
         this.titleText = new PIXI.Text('MASTERMIND', this.titleStyle);
         this.titleText.anchor.set(0.5);
+        this.titleText.scale.set(50);
         this.titleText.alpha = 0;
         this.addChild(this.titleText);
          
         gsap.timeline()
             .to(this.titleStyle, { letterSpacing: 20, duration: 2, ease: 'power4.out'}, '+=0.3')
             .to(this.titleStyle, { letterSpacing: 5, duration:1, ease: 'none'})
-        this.titleText.scale.x = 50;
-        this.titleText.scale.y = 50;
         gsap.timeline()
-        .to(this.titleText.scale, {x:0.9, y:0.9, duration:2.5, ease:'power2.out'})
-        .to(this.titleText.scale, {x:1.15, y:1.15, duration:1.5, ease:'power1.inOut'})
-
+            .to(this.titleText.scale, {x:0.9, y:0.9, duration:2.5, ease:'power2.out'})
+            .to(this.titleText.scale, {x:1.15, y:1.15, duration:1.5, ease:'power1.inOut'})
         gsap.to(this.titleText, {alpha:1, duration:1});
-
-        /* ------------------------------------------------------------
-            サブテキスト
-        ------------------------------------------------------------ */
+        /*
+            ===== Description =====
+        */
         this.descStyle = new PIXI.TextStyle({
             fontFamily:     'Inter',
             fontSize:       39,
             fontWeight:     400,
             fill:           'black',
-        })
+        });
         this.descText = new PIXI.Text('Guess the 4-digit secret code (no duplicates).', this.descStyle);
         this.descText.anchor.set(0.5);
         this.descText.y += 80;
         this.descText.alpha = 0;
-        this.descText.scale.x = 0.6;
-        this.descText.scale.y = 0.6;
+        this.descText.scale.set(0.6);
         this.addChild(this.descText);
 
         gsap.timeline().to(this.descText, {alpha:1, duration:1}, '+=3.2');
         gsap.timeline().to(this.descText.scale, {x:1, y:1, duration:0.9}, '+=3');
-
-        /* ------------------------------------------------------------
-            説明
-        ------------------------------------------------------------ */
+        /* 
+            ===== Instruction =====
+        */
         this.instStyle = new PIXI.TextStyle({
             fontFamily:     'Inter',
             fontSize:       39,
@@ -92,63 +86,58 @@ export class StartScreen extends PIXI.Container {
         this.instText.alpha = 0;
         this.addChild(this.instText);
 
-        gsap.timeline().to(this.instText, {alpha: 1, duration: 1}, '+=3.5')
-
-        /* ------------------------------------------------------------
-            startbtn
-        ------------------------------------------------------------ */        
-        this.btnStart = new PIXI.Sprite();
-        this.addChild(this.btnStart);
-        
-        this.startStyle = new PIXI.TextStyle({
+        gsap.timeline().to(this.instText, {alpha: 1, duration: 1}, '+=3.5');
+        /* 
+            ===== StartBtn =====
+        */
+        this.btnStyle = new PIXI.TextStyle({
             fontFamily:     'Inter',
             fontSize:       180,
             fontWeight:     100,
             fill:           'black',
-        })
-        this.btnStart = new PIXI.Text('↓', this.startStyle);
-        this.btnStart.anchor.set(0.5);
-        this.btnStart.y = 500;
-        this.btnStart.alpha = 0;
-        this.addChild(this.btnStart);
-        gsap.timeline().to(this.btnStart, {y: 550, duration:0.5, ease:'power1.out'}, '+=4');
-        gsap.timeline().to(this.btnStart, {alpha:1, duration: 0.5}, '+=4').call(this.enableStart.bind(this));   
-    }
-    
-
-    enableStart(){
-        this.btnStart.interactive = true;
-        this.btnStart.on('touchstart', (event) => {
-            this.btnStart.interactive = false;
-            this.readyToDie();
         });
+        this.startBtn = new PIXI.Text('↓', this.btnStyle);
+        this.startBtn.anchor.set(0.5);
+        this.startBtn.y = window.innerHeight / 4;
+        this.startBtn.alpha = 0;
+        this.addChild(this.startBtn);
+
+        gsap.timeline().to(this.startBtn, {y: 550, duration:0.5, ease:'power1.out', repeat:-1, repeatDelay:1}, '+=4');
+        gsap.timeline().to(this.startBtn, {alpha:1, duration: 0.5, repeat:-1, repeatDelay:1}, '+=4')
+            .call(() => {
+                this.startBtn.interactive = true;
+                this.startBtn.on('touchstart', (event) => {
+                    this.startBtn.interactive = false;
+                    gsap.killTweensOf(this.startBtn);
+                    this.readyToDie();
+                });
+            });
     }
     
+    /* ------------------------------------------------------------
+        Init
+    ------------------------------------------------------------ */
     readyToDie(){
-        this.btnStart.scale.x = 1.3;
-        this.btnStart.scale.y = 1.3;
-        gsap.timeline().to(this.btnStart.scale, {x:2, y:2, duration:0.1, ease:'expo'})
-        gsap.timeline().to(this.btnStart, {y:1000, duration:0.5, ease:'power1.in'}, '+=0.05')
-        // this.timeline().to(this.btnStart, {y:600})
+        this.startBtn.scale.set(1.3);
+        gsap.to(this.startBtn.scale, {x:2, y:2, duration:0.1, ease:'expo'})
+        gsap.timeline().to(this.startBtn, {y:1000, duration:0.5, ease:'power1.in'}, '+=0.05')
 
         // CIRCLE
-        this.circle = new PIXI.Graphics();
+        this.circle = GraphicsHelper.exDrawCircle(0, 0, 20, 0x000000);
         this.addChild(this.circle);
-        this.circle.beginFill(0x000000);
-        this.circle.drawCircle(0, 0, 20);
-        this.circle.y = 500;
-        this.circle.alpha =0;
+        this.circle.y = window.innerHeight / 4 + 100;
+        this.circle.alpha = 0;
         gsap.to(this.circle, {alpha:1, duration:0.4});
+
+        //  Stageout
         gsap.timeline().to(this.titleText, {y:this.titleText.y-200, alpha:0, duration:0.3, ease:'power1.in'})
-        .to(this.descText, {y:this.descText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
-        .to(this.instText, {y:this.instText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=50%')
+            .to(this.descText, {y:this.descText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=0.2')
+            .to(this.instText, {y:this.instText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=0.4')
         
         gsap.timeline().to(this.circle.scale, {x:50, y:50, duration:0.4})
-            .call(()=>{
+            .call(() => {
                 this.parent.startGame();
             });
         gsap.timeline().to(this.circle, {y:-2500, duration:1, ease:'power4.inOut'}, '+=0.1')
     }
-
-    
 }
