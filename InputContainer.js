@@ -12,6 +12,7 @@ export class InputContainer extends PIXI.Container {
         this.currentGuess = '';
         this.keyPadList = [];
         this.padMargin = 8;
+
         this.initKeyPads();
         this.initGuess();
     }
@@ -52,7 +53,6 @@ export class InputContainer extends PIXI.Container {
     onGuessHandler(number){
         if(this.currentGuess.length < 4){
             this.currentGuess += number;
-            // this.currentGuess.push(number);
             if(this.currentGuess.length == 4){
                 for(let i=0; i<10; i++){
                     this.keyPadList[i].mute();
@@ -60,8 +60,6 @@ export class InputContainer extends PIXI.Container {
                 gsap.to(this.keyPadContainer, {alpha:0, y:this.keyPadContainerBasePosY+100, duration:0.2});
                 gsap.to(this.keyPadContainer.scale, {x:0.9, y:0.9, duration:0.2});
                 this.showBtns();
-                // this.keyPadContainer.inactiveByLimit4();
-                // this.guessContainer.showSubmit();
             }
         }
         let output = '';
@@ -77,7 +75,6 @@ export class InputContainer extends PIXI.Container {
         gsap.killTweensOf(this.guessStyle);
         this.guessStyle.letterSpacing = -50;
         gsap.to(this.guessStyle, { letterSpacing: 0, duration:0.4, ease: 'back.out(4)'})
-            // this.guessContainer.updateGuess(output);
     }
 
     /* ------------------------------------------------------------
@@ -100,6 +97,7 @@ export class InputContainer extends PIXI.Container {
         this.guessBasePosY = window.innerHeight - this.keyPadContainer.height - 150;
         this.guessText.y = this.guessBasePosY;
         this.addChild(this.guessText);
+        this.guessText.visible = false;
 
         // ===== Submit =====
         this.btnStyle = new PIXI.TextStyle({
@@ -120,6 +118,8 @@ export class InputContainer extends PIXI.Container {
         // ===== Submit touch event =====
         this.submitBtn.on('touchstart', (event) => {
             this.submitBtn.interactive = false;
+            // ToDo リファクタする
+            // this.submitBtn.scale(1.3);
             this.submitBtn.scale.x = 1.3;
             this.submitBtn.scale.y = 1.3;
             gsap.to(this.deleteBtn, {alpha:0, duration:0.1});
@@ -129,7 +129,9 @@ export class InputContainer extends PIXI.Container {
                 this.submitBtn.visible = false;
                 this.deleteBtn.visible = false;
             });
-            this.submitAndReset();
+            // this.submitAndReset();
+            this.validGuess();
+            // this.parent.attemptContainer.addAttempt('1234', 'ss',9)
             // this.parent.guessSubmitHandler();
         });
         
@@ -199,23 +201,66 @@ export class InputContainer extends PIXI.Container {
     }
 
     /* ------------------------------------------------------------
+        Validation
+    ------------------------------------------------------------ */
+    validGuess(){
+        if(dataProvider.data.debug){
+            dataProvider.data.secret = '1234';
+        }
+
+        if(this.currentGuess == dataProvider.data.secret){
+            this.submitAndReset(1);
+            this.parent.attemptContainer.addAttempt(this.currentGuess, 'Match!', 2);
+            this.parent.endGame(this.currentGuess);
+        }else{
+            let isMatch = 0;
+            let isIncluded = 0;
+            for(let i = 0; i< 4; i++){
+                if(this.currentGuess[i] === dataProvider.data.secret[i]){
+                    isMatch ++;
+                }else if(dataProvider.data.secret.includes(this.currentGuess[i])){
+                    isIncluded ++;
+                }
+            }
+
+            let feedback = '';
+            if(isMatch > 0 && isIncluded > 0){
+                feedback = `${isMatch}H / ${isIncluded}B`;
+            }else{
+                if(isMatch == 0 && isIncluded == 0){
+                    feedback = 'No match';
+                }else{
+                    feedback = isMatch > 0 ? `${isMatch}H` : feedback;
+                    feedback = isIncluded > 0 ? `${isIncluded}B` : feedback;
+                }
+            }
+            let flag = isMatch == 0 && isIncluded == 1 ? 0:1;
+            this.submitAndReset();
+            this.parent.attemptContainer.addAttempt(this.currentGuess, feedback, flag);
+        }
+    }
+
+    /* ------------------------------------------------------------
         Submit guess
     ------------------------------------------------------------ */
-    submitAndReset(){
+    submitAndReset(match){
         gsap.killTweensOf(this.guessText);
         gsap.to(this.guessText.scale, {x:0.85, y:0.85, duration:0.2});
         gsap.to(this.guessText, {y:this.guessBasePosY-200, duration:0.2, ease:'back.in(1)'});
-        gsap.timeline().to(this.guessText, {alpha:1, duration:0.2})
+        gsap.timeline().to(this.guessText, {alpha:0, duration:0.2})
         .call(()=>{
-            gsap.timeline().to(this.guessText, {alpha:1, duration:0.2})
-            this.guessStyle.letterSpacing = -50;
-            this.guessText.text = '****';
-            this.guessText.y = this.guessBasePosY + 200;
-            gsap.timeline().to(this.guessText.scale, {x:1, y:1, duration:0.15});
-            gsap.timeline().to(this.guessText, {y:this.guessBasePosY, duration:0.2, ease:'back.out(1)'});
-            gsap.timeline().to(this.guessStyle, {letterSpacing:0, duration:0.15, ease:'back.out(1)'})
-            this.resetKeyPads();
-            });
+            if(!match){
+                this.guessText.alpha = 0;
+                gsap.timeline().to(this.guessText, {alpha:1, duration:0.2}, '+=0.2')
+                this.guessStyle.letterSpacing = -50;
+                this.guessText.text = '****';
+                this.guessText.y = this.guessBasePosY + 200;
+                gsap.timeline().to(this.guessText.scale, {x:1, y:1, duration:0.15}, '+=0.2');
+                gsap.timeline().to(this.guessText, {y:this.guessBasePosY, duration:0.2, ease:'back.out(1)'}, '+=0.2');
+                gsap.timeline().to(this.guessStyle, {letterSpacing:0, duration:0.15, ease:'back.out(1)'}, '+=0.2')
+                this.resetKeyPads();
+            }
+        });
     }
     
     resetKeyPads(){
@@ -233,6 +278,7 @@ export class InputContainer extends PIXI.Container {
 
     ------------------------------------------------------------ */
     start(){
+        this.guessText.visible = true;
         // ===== KeyPads =====
         this.keyPadContainer.alpha = 0;
         this.keyPadContainer.visible = true;

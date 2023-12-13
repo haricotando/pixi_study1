@@ -42,7 +42,7 @@ export class InfoContainer extends PIXI.Container {
             gsap.timeline().to(this.dialog.scale, {x:1.5, y:1.5, duration:0.3, ease:'expo'})
             gsap.timeline().to(this.dialog, {alpha:0, duration:0.3, ease:'expo'})
             .call(()=>{
-                this.parent.btnInfo.interactive = true;
+                this.parent.infoBtn.interactive = true;
                 this.parent.removeChild(this);
             })
         });

@@ -1,7 +1,9 @@
+import { AttemptContainer } from './AttemptContainer.js';
 import { dataProvider } from './DataProvider.js';
+import { EndScreen } from './EndScreen.js';
+import { InfoContainer } from './InfoContainer.js';
 import { InputContainer } from './InputContainer.js';
 import { StartScreen } from './StartScreen.js';
-// import { InputContainer } from './InputContainer.js';
 
 export class ApplicationRoot extends PIXI.Container {
 
@@ -12,17 +14,29 @@ export class ApplicationRoot extends PIXI.Container {
         super();
 
         this.generateSecretCode();
+        this.initInfoBtn();
+        this.initEndScreen();
         this.initStartScreen();
         this.initInputContainer();
+        this.initAttemptConatiner();
     }
 
     /* ------------------------------------------------------------
         StartScreen
     ------------------------------------------------------------ */
     initStartScreen(){
+        // Debugモードではイントロを省略する
         if(!dataProvider.data.debug){
             this.startScreen = new StartScreen();
             this.addChild(this.startScreen);
+        }
+    }
+    
+    initEndScreen(){
+        this.endScreen = new EndScreen();
+        this.addChild(this.endScreen);
+        if(dataProvider.data.debug){
+            this.endScreen.start('1234');
         }
     }
 
@@ -37,6 +51,41 @@ export class ApplicationRoot extends PIXI.Container {
         }
     }
 
+    /* ------------------------------------------------------------
+        Attempt
+    ------------------------------------------------------------ */
+    initAttemptConatiner(){
+        this.attemptContainer = new AttemptContainer();
+        this.addChild(this.attemptContainer);
+    }
+
+    /* ------------------------------------------------------------
+        Information btn / Info Container
+    ------------------------------------------------------------ */
+    initInfoBtn(){
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Material Icons',
+            fontSize: 70,
+            fill: 'gray',
+            });
+
+        this.infoBtn = new PIXI.Text('\ue88e', style);
+        this.addChild(this.infoBtn);
+        this.infoBtn.x = window.innerWidth - this.infoBtn.width -40;
+        this.infoBtn.y = 40;
+        
+        this.infoBtn.on('touchstart', (event) => {
+            this.infoBtn.interactive = false;
+            this.infoContainer = new InfoContainer();
+            this.addChild(this.infoContainer);
+        });
+        
+        // this.infoBtn.alpha = 0;
+        // gsap.timeline().to(this.infoBtn, {alpha:0, duration:0.1}, '+=4').call(()=>{
+            this.infoBtn.interactive = true;
+        // }).to(this.infoBtn, {alpha:1, duration:0.3});
+    }
+
     startGame(){
         this.inputContainer.start();
         // this.infoContainer.start();
@@ -44,6 +93,10 @@ export class ApplicationRoot extends PIXI.Container {
         // this.guessContainer.start();
     }
 
+    endGame(guess){
+        console.log('endgame')
+        this.endScreen.start(guess);
+    }
 
 
 
@@ -58,34 +111,34 @@ export class ApplicationRoot extends PIXI.Container {
 
 
 
-    initBtnInfo(){
-        const style = new PIXI.TextStyle({
-            fontFamily: 'Material Icons',
-            fontSize: 70,
-            fill: 'gray',
-            });
+    // old_initBtnInfo(){
+    //     const style = new PIXI.TextStyle({
+    //         fontFamily: 'Material Icons',
+    //         fontSize: 70,
+    //         fill: 'gray',
+    //         });
 
-        this.btnInfo = new PIXI.Text('\ue88e', style);
-        this.addChild(this.btnInfo);
-        this.btnInfo.x = window.innerWidth - this.btnInfo.width -40;
-        this.btnInfo.y = 40;
+    //     this.btnInfo = new PIXI.Text('\ue88e', style);
+    //     this.addChild(this.btnInfo);
+    //     this.btnInfo.x = window.innerWidth - this.btnInfo.width -40;
+    //     this.btnInfo.y = 40;
         
-        this.btnInfo.on('touchstart', (event) => {
-            this.btnInfo.interactive = false;
-            this.infoContainer = new InfoContainer();
-            this.addChild(this.infoContainer);
+    //     this.btnInfo.on('touchstart', (event) => {
+    //         this.btnInfo.interactive = false;
+    //         this.infoContainer = new InfoContainer();
+    //         this.addChild(this.infoContainer);
             
-            // const blurFilter = new PIXI.filters.BlurFilter();
-            // blurFilter.blur = 5;
-            // this.filters = [blurFilter];
+    //         // const blurFilter = new PIXI.filters.BlurFilter();
+    //         // blurFilter.blur = 5;
+    //         // this.filters = [blurFilter];
             
-        });
+    //     });
         
-        this.btnInfo.alpha = 0;
-        gsap.timeline().to(this.btnInfo, {alpha:0, duration:0.1}, '+=4').call(()=>{
-            this.btnInfo.interactive = true;
-        }).to(this.btnInfo, {alpha:1, duration:0.3});
-    }
+    //     this.btnInfo.alpha = 0;
+    //     gsap.timeline().to(this.btnInfo, {alpha:0, duration:0.1}, '+=4').call(()=>{
+    //         this.btnInfo.interactive = true;
+    //     }).to(this.btnInfo, {alpha:1, duration:0.3});
+    // }
     /* ------------------------------------------------------------
         ゲーム開始のイントロ
     ------------------------------------------------------------ */
@@ -114,7 +167,6 @@ export class ApplicationRoot extends PIXI.Container {
         サブミット
     ------------------------------------------------------------ */
     guessSubmitHandler(){
-
         if(this.debug){
             this.guessContainer.reset();
             this.logContainer.guessMatch('2958');
