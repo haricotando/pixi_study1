@@ -10,6 +10,7 @@ export class AttemptContainer extends PIXI.Container {
         super();
 
         this.attemptCount = 0;
+        this.attempts = [];
         // gsap.timeline().to(this, {alpha:1, duration:1})
         // .call(() =>{ this.addAttempt('1234', 'Match!', 2);})
         // .to(this, {alpha:1, duration:1})
@@ -33,6 +34,7 @@ export class AttemptContainer extends PIXI.Container {
         AlignHelper.xCenterWindow(guessContainer);
         guessContainer.y = window.innerHeight/2;
         this.addChild(guessContainer);
+        this.attempts.push(guessContainer);
         
         // ===== Guess =====
         let guessStyle = new PIXI.TextStyle({
@@ -86,6 +88,12 @@ export class AttemptContainer extends PIXI.Container {
 
     reset(){
         this.attemptCount = 0;
+        let i = 0;
+        while(i < this.attempts.length){
+            console.log(this.attempts[i]);
+            this.removeChild(this.attempts);
+            i++;
+        }
     }
 
 }

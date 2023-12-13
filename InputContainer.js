@@ -212,6 +212,7 @@ export class InputContainer extends PIXI.Container {
             this.submitAndReset(1);
             this.parent.attemptContainer.addAttempt(this.currentGuess, 'Match!', 2);
             this.parent.endGame(this.currentGuess);
+            this.submitAndReset(true);
         }else{
             let isMatch = 0;
             let isIncluded = 0;
@@ -278,6 +279,9 @@ export class InputContainer extends PIXI.Container {
 
     ------------------------------------------------------------ */
     start(){
+        this.currentGuess = '';
+        this.guessText.text = '****';
+        //
         this.guessText.visible = true;
         // ===== KeyPads =====
         this.keyPadContainer.alpha = 0;
@@ -295,5 +299,16 @@ export class InputContainer extends PIXI.Container {
         gsap.timeline().to(this.guessText, {alpha:1, y:this.guessBasePosY, duration:0.3, ease:'power1.out'}, '+=0.6');
         this.guessStyle.letterSpacing = -50;
         gsap.timeline().to(this.guessStyle, { letterSpacing: 0, duration:0.5, ease: 'back'}, '+=0.6')
+    }
+
+    reset(){
+        this.currentGuess = '';
+        this.guessText.text = '****';
+        this.guessText.y = this.guessBasePosY + 200;
+        this.guessText.alpha = 0;
+        gsap.timeline().to(this.guessText, {alpha:1, y:this.guessBasePosY, duration:0.3, ease:'power1.out'}, '+=0.6');
+        this.guessStyle.letterSpacing = -50;
+        gsap.timeline().to(this.guessStyle, { letterSpacing: 0, duration:0.5, ease: 'back'}, '+=0.6')
+        this.resetKeyPads();
     }
 }
