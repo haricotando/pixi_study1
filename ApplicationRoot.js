@@ -15,10 +15,10 @@ export class ApplicationRoot extends PIXI.Container {
 
         this.generateSecretCode();
         this.initInfoBtn();
-        this.initEndScreen();
         this.initStartScreen();
         this.initInputContainer();
         this.initAttemptConatiner();
+        this.initEndScreen();
     }
 
     /* ------------------------------------------------------------
@@ -35,6 +35,13 @@ export class ApplicationRoot extends PIXI.Container {
     initEndScreen(){
         this.endScreen = new EndScreen();
         this.addChild(this.endScreen);
+
+        if(dataProvider.data.debug){
+            gsap.timeline().to(this.endScreen, {alpha:1, duration:1})
+                .call(() => {
+                   this.endScreen.gameover();
+                });
+        }
         // if(dataProvider.data.debug){
         //     this.endScreen.start('1234');
         // }
@@ -80,10 +87,10 @@ export class ApplicationRoot extends PIXI.Container {
             this.addChild(this.infoContainer);
         });
         
-        // this.infoBtn.alpha = 0;
-        // gsap.timeline().to(this.infoBtn, {alpha:0, duration:0.1}, '+=4').call(()=>{
+        this.infoBtn.alpha = 0;
+        gsap.timeline().to(this.infoBtn, {alpha:0, duration:0.1}, '+=4').call(()=>{
             this.infoBtn.interactive = true;
-        // }).to(this.infoBtn, {alpha:1, duration:0.3});
+        }).to(this.infoBtn, {alpha:1, duration:0.3});
     }
 
     startGame(){
@@ -96,6 +103,11 @@ export class ApplicationRoot extends PIXI.Container {
     endGame(guess){
         console.log('endgame')
         this.endScreen.start(guess);
+    }
+
+    gameover(){
+        console.log('game is over');
+        this.endScreen.gameover();
     }
 
     resetGame(){
