@@ -102,13 +102,13 @@ export class StartScreen extends PIXI.Container {
         this.startBtn.alpha = 0;
         this.addChild(this.startBtn);
 
-        gsap.timeline().to(this.startBtn, {y: 550, duration:0.5, ease:'power1.out', repeat:-1, repeatDelay:1}, '+=4');
-        gsap.timeline().to(this.startBtn, {alpha:1, duration: 0.5, repeat:-1, repeatDelay:1}, '+=4')
+        let tw = gsap.timeline().to(this.startBtn, {y: 550, duration:0.5, ease:'power1.out', repeat:-1, repeatDelay:1}, '+=4');
+        gsap.timeline().to(this.startBtn, {alpha:1, duration: 0.5}, '+=4')
             .call(() => {
                 this.startBtn.interactive = true;
                 this.startBtn.on('touchstart', (event) => {
                     this.startBtn.interactive = false;
-                    gsap.killTweensOf(this.startBtn);
+                    tw.kill();
                     this.readyToDie();
                 });
             });
@@ -139,5 +139,8 @@ export class StartScreen extends PIXI.Container {
                 this.parent.startGame();
             });
         gsap.timeline().to(this.circle, {y:-2500, duration:1, ease:'power4.inOut'}, '+=0.1')
+        .call(() =>{
+            this.parent.removeChild(this);
+        });
     }
 }

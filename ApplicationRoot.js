@@ -36,12 +36,12 @@ export class ApplicationRoot extends PIXI.Container {
         this.endScreen = new EndScreen();
         this.addChild(this.endScreen);
 
-        if(dataProvider.data.debug){
-            gsap.timeline().to(this.endScreen, {alpha:1, duration:1})
-                .call(() => {
-                   this.endScreen.gameover();
-                });
-        }
+        // if(dataProvider.data.debug){
+        //     gsap.timeline().to(this.endScreen, {alpha:1, duration:1})
+        //         .call(() => {
+        //            this.endScreen.gameover();
+        //         });
+        // }
         // if(dataProvider.data.debug){
         //     this.endScreen.start('1234');
         // }
@@ -113,6 +113,8 @@ export class ApplicationRoot extends PIXI.Container {
     resetGame(){
         this.generateSecretCode();
         this.inputContainer.reset();
+        // this.removeChild(this.inputContainer);
+        // this.inputContainer = new InputContainer();
         this.removeChild(this.attemptContainer);
         this.initAttemptConatiner();
     }

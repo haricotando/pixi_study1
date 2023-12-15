@@ -11,10 +11,6 @@ export class AttemptContainer extends PIXI.Container {
 
         this.attemptCount = 0;
         this.attempts = [];
-        // gsap.timeline().to(this, {alpha:1, duration:1})
-        // .call(() =>{ this.addAttempt('1234', 'Match!', 2);})
-        // .to(this, {alpha:1, duration:1})
-        // .call(() =>{ this.addAttempt('4234', '1H / 2B', 0);})
     }
 
     /* ------------------------------------------------------------
@@ -83,6 +79,10 @@ export class AttemptContainer extends PIXI.Container {
             // gsap.timeline().to(circle, {alpha:1, duration:0.3}, '+=0.4');
             // gsap.timeline().to(circle.scale, {x:1, y:1, duration:0.4, ease:'back.out(1)'}, '+=0.4')
 
+        }
+        console.log(this.attemptCount);
+        if(this.attemptCount>1){
+            this.parent.gameover();
         }
     }
 

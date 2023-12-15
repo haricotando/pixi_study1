@@ -15,19 +15,14 @@ export class EndScreen extends PIXI.Container {
         init
     ------------------------------------------------------------ */
     init(){
+        // もしかしていらないかも
     }
-    
+
+    /* ------------------------------------------------------------
+        正解時の演出スタート
+    ------------------------------------------------------------ */
     start(guess){
-        // ===== Background ====-
-        this.bg = GraphicsHelper.exDrawRect(0,0,100, 100, 0x000000);
-        this.bg.width = window.innerWidth;
-        this.bg.height = window.innerHeight;
-        this.bg.alpha = 0;
-        this.addChild(this.bg);
-
-        gsap.to(this.bg, {alpha:0.3, duration:0.3});
-
-        
+        this.initBG();        
         // ===== Circle FX =====
         this.circleFX(0xFFFF00, 0.3, 0.2, 1);
         this.circleFX(0xFF00FF, 0.3, 0.22, 1);
@@ -92,26 +87,18 @@ export class EndScreen extends PIXI.Container {
         gsap.timeline().to(this.retryBtn, {y:window.innerHeight / 2+300, duration:0.5, ease:'back'}, '+=0.3');
         gsap.timeline().to(this.retryBtn.scale, {x:1, y:1, duration:0.5, ease:'back.out(3)'}, '+=0.5');
 
-        // ===== Submit touch event =====
+        // ===== Retry touch event =====
         this.retryBtn.on('touchstart', (event) => {
             this.retryBtn.interactive = false;
             this.retryBtn.visible =false;
             this.readyToDie();
-            // gsap.to(this.deleteBtn, {alpha:0, duration:0.1});
-            // gsap.to(this.submitBtn.scale, {x:0.8, y:0.8, duration:0.2, ease:'back.in(3)'})
-            // gsap.timeline().to(this.submitBtn, {alpha:0, duration:0.2})
-            // .call(() =>{
-            //     this.submitBtn.visible = false;
-            //     this.deleteBtn.visible = false;
-            // });
-            // this.submitAndReset();
-            // this.validGuess();
-            // this.parent.attemptContainer.addAttempt('1234', 'ss',9)
-            // this.parent.guessSubmitHandler();
         });
 
     }
 
+    /* ------------------------------------------------------------
+        汎用エフェクト
+    ------------------------------------------------------------ */
     circleFX(color, time, delay, deleteAfterFX){
         let circle = GraphicsHelper.exDrawCircle(0, 0, window.innerWidth/2 * 0.9, color);
         AlignHelper.centerWindow(circle);
@@ -129,6 +116,72 @@ export class EndScreen extends PIXI.Container {
             });
         return circle;
     }
+
+    /* ------------------------------------------------------------
+        汎用背景
+    ------------------------------------------------------------ */
+    initBG(){
+        this.bg = GraphicsHelper.exDrawRect(0,0,100, 100, 0x000000);
+        this.bg.width = window.innerWidth;
+        this.bg.height = window.innerHeight;
+        this.bg.alpha = 0;
+        this.addChild(this.bg);
+        this.bg.interactive = true;
+    
+    
+        gsap.to(this.bg, {alpha:0.5, duration:0.3});
+    }
+
+    /* ------------------------------------------------------------
+        Gameover
+    ------------------------------------------------------------ */
+    gameover(){
+        this.initBG();
+
+        this.box = GraphicsHelper.exDrawRect(-400, -400, 800, 800, 0x000000);
+        AlignHelper.centerWindow(this.box);
+        this.addChild(this.box);
+        // ===== Gameover =====
+        this.gameoverStyle = new PIXI.TextStyle({
+            fontFamily:     'Inter',
+            fontSize:       dataProvider.data.padSize * 1,
+            fontWeight:     200,
+            fill:           'white',
+        });
+        
+        this.gameoverText = new PIXI.Text('GAMEOVER!', this.gameoverStyle);
+        this.gameoverText.anchor.set(0.5);
+        AlignHelper.xCenterWindow(this.gameoverText);
+        this.gameoverText.y = window.innerHeight/2;
+        this.addChild(this.gameoverText);
+
+        // ===== Retry =====
+        this.btnStyle = new PIXI.TextStyle({
+            fontFamily:     'Material Icons',
+            fontSize:       dataProvider.data.padSize * 1,
+            fontWeight:     200,
+            fill:           'white',
+        });
+        
+        this.retryBtn = new PIXI.Text('\ue042', this.btnStyle);
+        this.addChild(this.retryBtn);
+        this.retryBtn.interactive = true;
+        this.retryBtn.anchor.set(0.5);
+        AlignHelper.centerWindow(this.retryBtn);
+        this.retryBtn.y += window.innerHeight * 0.15;
+
+        // ===== Retry touch event =====
+        this.retryBtn.on('touchstart', (event) => {
+            this.retryBtn.interactive = false;
+            this.suicide();
+            // this.readyToDie();
+        });
+        
+    }
+
+
+
+    
     /* ------------------------------------------------------------
         readyToDie
     ------------------------------------------------------------ */
@@ -139,7 +192,17 @@ export class EndScreen extends PIXI.Container {
         gsap.timeline().to(this.circleBG.scale, {x:5, y:5, duration:0.3, ease:'power1.in'})
             .call(() => {
                 this.parent.resetGame();
+                this.suicide();
             });
         gsap.timeline().to(this.circleBG, {y:-2500, duration:0.6, ease:'power1.in'});
+    }
+
+
+
+    suicide(){
+        if(this.bg){
+            this.bg.interactive = false;
+        }
+        this.parent.removeChild(this);
     }
 }

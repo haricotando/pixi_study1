@@ -69,10 +69,11 @@ export class InputContainer extends PIXI.Container {
 
         this.guessText.text = output;
         gsap.killTweensOf(this.guessText);
+        this.guessText.alpha = 1;
         this.guessText.x = window.innerWidth / 2;
         this.guessText.y = this.guessBasePosY + 50;
         gsap.to(this.guessText, {y: this.guessBasePosY, duration: 1, ease: 'elastic.out(1,0.3)'});
-        gsap.killTweensOf(this.guessStyle);
+        // gsap.killTweensOf(this.guessStyle);
         this.guessStyle.letterSpacing = -50;
         gsap.to(this.guessStyle, { letterSpacing: 0, duration:0.4, ease: 'back.out(4)'})
     }
@@ -117,22 +118,7 @@ export class InputContainer extends PIXI.Container {
         
         // ===== Submit touch event =====
         this.submitBtn.on('touchstart', (event) => {
-            this.submitBtn.interactive = false;
-            // ToDo リファクタする
-            // this.submitBtn.scale(1.3);
-            this.submitBtn.scale.x = 1.3;
-            this.submitBtn.scale.y = 1.3;
-            gsap.to(this.deleteBtn, {alpha:0, duration:0.1});
-            gsap.to(this.submitBtn.scale, {x:0.8, y:0.8, duration:0.2, ease:'back.in(3)'})
-            gsap.timeline().to(this.submitBtn, {alpha:0, duration:0.2})
-            .call(() =>{
-                this.submitBtn.visible = false;
-                this.deleteBtn.visible = false;
-            });
-            // this.submitAndReset();
-            this.validGuess();
-            // this.parent.attemptContainer.addAttempt('1234', 'ss',9)
-            // this.parent.guessSubmitHandler();
+            this.submitHandler();
         });
         
         // ===== Delete =====
@@ -201,10 +187,32 @@ export class InputContainer extends PIXI.Container {
     }
 
     /* ------------------------------------------------------------
+        Submit
+    ------------------------------------------------------------ */
+    submitHandler(){
+        this.submitBtn.interactive = false;
+        // ToDo リファクタする
+        // this.submitBtn.scale(1.3);
+        this.submitBtn.scale.x = 1.3;
+        this.submitBtn.scale.y = 1.3;
+        gsap.to(this.deleteBtn, {alpha:0, duration:0.1});
+        gsap.to(this.submitBtn.scale, {x:0.8, y:0.8, duration:0.2, ease:'back.in(3)'})
+        gsap.timeline().to(this.submitBtn, {alpha:0, duration:0.2})
+            .call(() =>{
+                this.submitBtn.visible = false;
+                this.deleteBtn.visible = false;
+            });
+        // this.submitAndReset();
+        this.validGuess();
+        // this.parent.attemptContainer.addAttempt('1234', 'ss',9)
+        // this.parent.guessSubmitHandler();
+    }
+
+    /* ------------------------------------------------------------
         Validation
     ------------------------------------------------------------ */
     validGuess(){
-        if(dataProvider.data.debug){
+        if(dataProvider.data.answerLock){
             dataProvider.data.secret = '1234';
         }
 
