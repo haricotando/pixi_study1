@@ -76,13 +76,14 @@ export class StartScreen extends PIXI.Container {
         */
         this.instStyle = new PIXI.TextStyle({
             fontFamily:     'Inter',
-            fontSize:       39,
+            fontSize:       35,
             fontWeight:     200,
             fill:           'black',
+            align: 'center',
         })
-        this.instText = new PIXI.Text('- instruction - 文章は後で考える', this.instStyle);
+        this.instText = new PIXI.Text('"Hit"\nmeans right digit, right place.\n\n"Blow"\nmeans right digit, wrong place.', this.instStyle);
         this.instText.anchor.set(0.5);
-        this.instText.y += 200;
+        this.instText.y += 250;
         this.instText.alpha = 0;
         this.addChild(this.instText);
 
