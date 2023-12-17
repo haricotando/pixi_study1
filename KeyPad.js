@@ -1,5 +1,5 @@
 import GraphicsHelper from './helper/GraphicsHelper.js';
-import { dataProvider } from './xdataProvider.js';
+import { dataProvider } from './dataProvider.js';
 
 export class KeyPad extends PIXI.Container {
     /* ============================================================

@@ -1,5 +1,5 @@
 import { AttemptContainer } from './AttemptContainer.js';
-import { dataProvider } from './xdataProvider.js';
+import { dataProvider } from './dataProvider.js';
 import { EndScreen } from './EndScreen.js';
 import { InfoContainer } from './InfoContainer.js';
 import { InputContainer } from './InputContainer.js';
