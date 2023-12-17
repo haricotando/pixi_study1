@@ -6,10 +6,7 @@ export class InfoContainer extends PIXI.Container {
     ============================================================ */
     constructor() {
         super();
-        this.init();
-    }
 
-    init(){
         // Background
         this.bg = new PIXI.Graphics();
         this.bg.beginFill(0x000000);
@@ -38,13 +35,7 @@ export class InfoContainer extends PIXI.Container {
         //
         this.dialog.interactive = true;
         this.dialog.on('touchstart', (event) => {
-            gsap.to(this.bg, {alpha:0, duration:0.3});
-            gsap.timeline().to(this.dialog.scale, {x:1.5, y:1.5, duration:0.3, ease:'expo'})
-            gsap.timeline().to(this.dialog, {alpha:0, duration:0.3, ease:'expo'})
-            .call(()=>{
-                this.parent.infoBtn.interactive = true;
-                this.parent.removeChild(this);
-            })
+            this.readyToDie();
         });
 
         // QR
@@ -62,5 +53,18 @@ export class InfoContainer extends PIXI.Container {
         this.qrContainer.y = 100;
         this.dialog.addChild(this.qrContainer);
 
+    }
+
+    /* ------------------------------------------------------------
+        削除準備〜削除まで
+    ------------------------------------------------------------ */
+    readyToDie(){
+        gsap.to(this.bg, {alpha:0, duration:0.3});
+        gsap.timeline().to(this.dialog.scale, {x:1.5, y:1.5, duration:0.3, ease:'expo'})
+        gsap.timeline().to(this.dialog, {alpha:0, duration:0.3, ease:'expo'})
+        .call(()=>{
+            this.parent.infoBtn.interactive = true;
+            this.parent.removeChild(this);
+        })
     }
 }

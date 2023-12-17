@@ -9,12 +9,15 @@ export class InputContainer extends PIXI.Container {
     constructor() {
         super();
 
+        this.init();
+        this.initKeyPads();
+        this.initGuess();
+    }
+
+    init(){
         this.currentGuess = '';
         this.keyPadList = [];
         this.padMargin = 8;
-
-        this.initKeyPads();
-        this.initGuess();
     }
 
     /* ------------------------------------------------------------
@@ -59,7 +62,8 @@ export class InputContainer extends PIXI.Container {
                 }
                 gsap.to(this.keyPadContainer, {alpha:0, y:this.keyPadContainerBasePosY+100, duration:0.2});
                 gsap.to(this.keyPadContainer.scale, {x:0.9, y:0.9, duration:0.2});
-                this.showBtns();
+                this.activateSubDelBtn(this.deleteBtn, -300, false);
+                this.activateSubDelBtn(this.submitBtn, 300, true);
             }
         }
         let output = '';
@@ -73,7 +77,6 @@ export class InputContainer extends PIXI.Container {
         this.guessText.x = window.innerWidth / 2;
         this.guessText.y = this.guessBasePosY + 50;
         gsap.to(this.guessText, {y: this.guessBasePosY, duration: 1, ease: 'elastic.out(1,0.3)'});
-        // gsap.killTweensOf(this.guessStyle);
         this.guessStyle.letterSpacing = -50;
         gsap.to(this.guessStyle, { letterSpacing: 0, duration:0.4, ease: 'back.out(4)'})
     }
@@ -95,7 +98,7 @@ export class InputContainer extends PIXI.Container {
         this.guessText = new PIXI.Text('****', this.guessStyle);
         this.guessText.anchor.set(0.5);
         AlignHelper.xCenterWindow(this.guessText);
-        this.guessBasePosY = window.innerHeight - this.keyPadContainer.height - 150;
+        this.guessBasePosY = window.innerHeight - this.keyPadContainer.height - window.innerHeight * 0.1;
         this.guessText.y = this.guessBasePosY;
         this.addChild(this.guessText);
         this.guessText.visible = false;
@@ -118,7 +121,9 @@ export class InputContainer extends PIXI.Container {
         
         // ===== Submit touch event =====
         this.submitBtn.on('touchstart', (event) => {
-            this.submitHandler();
+            this.submitBtn.interactive = false;
+            dataProvider.data.currentAttempt ++;
+            this.subDelHander(true);
         });
         
         // ===== Delete =====
@@ -133,17 +138,83 @@ export class InputContainer extends PIXI.Container {
         // ===== Delete touch event =====
         this.deleteBtn.on('touchstart', (event) => {
             this.deleteBtn.interactive = false;
-            this.deleteBtn.scale.x = 1.3;
-            this.deleteBtn.scale.y = 1.3;
-            gsap.to(this.submitBtn, {alpha:0, duration:0.1});
-            gsap.timeline().to(this.deleteBtn.scale, {x:0.8, y:0.8, duration:0.2, ease:'back.in(3)'})
-                .call(() =>{
-                    this.submitBtn.visible = false;
-                    this.deleteBtn.visible = false;
+            this.subDelHander(false);
+        });   
+    }
+
+
+
+    /* ------------------------------------------------------------
+        Show Submit / Delete
+    ------------------------------------------------------------ */
+    activateSubDelBtn(target, xOffset, delay){
+        target.interactive = false;
+        target.scale.x = 0.1;
+        target.scale.y = 0.1;
+        target.alpha = 1;
+        target.visible = true;
+        let delayParam = delay ? '+=0.1' : '';
+        target.y = this.keyPadContainerBasePosY + 300;
+        gsap.timeline().to(target, {y:this.keyPadContainerBasePosY, duration:0.3, ease:'back'}, delayParam);
+        gsap.timeline().to(target.scale, {x:1, y:1, duration:0.5, ease:'back'}, delayParam)
+            .call(()=>{
+                target.interactive = true;
+            });
+
+    }
+
+    /* ------------------------------------------------------------
+        Submit / Delete
+    ------------------------------------------------------------ */
+    subDelHander(isSubmit){
+        let target1 = isSubmit ? this.submitBtn : this.deleteBtn;
+        let target2 = isSubmit ? this.deleteBtn : this.submitBtn;
+        target1.scale.set(1.3);
+        gsap.to(target1.scale, {x:0.8, y:0.8, duration:0.2, ease:'back.in(3)'})
+        gsap.to(target2, {alpha:0, duration:0.1});
+        gsap.timeline().to(target1, {alpha:0, duration:0.2})
+            .call(() =>{
+                target1.visible = false;
+                target2.visible = false;
+                if(!isSubmit){
                     this.resetKeyPads();
-                });
-            
-            // ===== Reset guess =====
+                }
+            });
+
+        if(isSubmit){
+            // if submit
+            dataProvider.data.lastGuess = this.currentGuess;
+            let result = this.validGuess();
+            console.log('attemp: ' + dataProvider.data.currentAttempt + ' / ' + dataProvider.data.attemptMax);
+            switch (result) {
+                case 'Match':
+                    this.submitAndReset(true);
+                    this.parent.attemptContainer.addAttempt(this.currentGuess, 'Match!', 2);
+                    this.parent.endGame(true);
+                    this.submitAndReset(true);
+                    break;
+                case 'No match':
+                    this.parent.attemptContainer.addAttempt(this.currentGuess, result, 1);
+                    if(dataProvider.data.currentAttempt >= dataProvider.data.attemptMax){
+                        this.parent.endGame(false);
+                        this.submitAndReset(true);
+                        return false;
+                    }
+                    this.submitAndReset();
+                    break;
+                default:
+                    this.parent.attemptContainer.addAttempt(this.currentGuess, result, 0);
+                    if(dataProvider.data.currentAttempt >= dataProvider.data.attemptMax){
+                        this.parent.endGame(false);
+                        this.submitAndReset(true);
+                        return false;
+                    }
+                    this.submitAndReset();
+                    break;
+            }
+                        
+        }else{
+            // if delete
             let posX = window.innerWidth/2;
             gsap.timeline()
                 .to(this.guessText, {x:posX-50, duration:0.05})
@@ -153,61 +224,9 @@ export class InputContainer extends PIXI.Container {
             this.guessStyle.letterSpacing = 100;
             gsap.timeline().to(this.guessStyle, {letterSpacing:0, duration:0.2});
             this.currentGuess = '';
-        });   
+        }
     }
-
-    /* ------------------------------------------------------------
-        Show Submit / Delete
-    ------------------------------------------------------------ */
-    showBtns(){
-        // ===== Submit =====
-        this.submitBtn.interactive = false;
-        this.submitBtn.scale.x = 0.1;
-        this.submitBtn.scale.y = 0.1;
-        this.submitBtn.alpha = 1;
-        this.submitBtn.visible = true;
-        this.submitBtn.y = this.keyPadContainerBasePosY + 300;
-        gsap.to(this.submitBtn, {y:this.keyPadContainerBasePosY, duration:0.3, ease:'back'})
-        gsap.timeline().to(this.submitBtn.scale, {x:1, y:1, duration:0.5, ease:'back'})
-            .call(()=>{
-                this.submitBtn.interactive = true;
-            });
-        // ===== Delete =====
-        this.deleteBtn.interactive = false;
-        this.deleteBtn.scale.x = 0.1;
-        this.deleteBtn.scale.y = 0.1;
-        this.deleteBtn.alpha = 1;
-        this.deleteBtn.y = this.keyPadContainerBasePosY + 300;
-        this.deleteBtn.visible = true;
-        gsap.timeline().to(this.deleteBtn, {y:this.keyPadContainerBasePosY, duration:0.3, ease:'back'}, '+=0.1')
-        gsap.timeline().to(this.deleteBtn.scale, {x:1, y:1, duration:0.5, ease:'back'}, '+=0.1')
-            .call(()=>{
-                this.deleteBtn.interactive = true;
-            });
-    }
-
-    /* ------------------------------------------------------------
-        Submit
-    ------------------------------------------------------------ */
-    submitHandler(){
-        this.submitBtn.interactive = false;
-        // ToDo リファクタする
-        // this.submitBtn.scale(1.3);
-        this.submitBtn.scale.x = 1.3;
-        this.submitBtn.scale.y = 1.3;
-        gsap.to(this.deleteBtn, {alpha:0, duration:0.1});
-        gsap.to(this.submitBtn.scale, {x:0.8, y:0.8, duration:0.2, ease:'back.in(3)'})
-        gsap.timeline().to(this.submitBtn, {alpha:0, duration:0.2})
-            .call(() =>{
-                this.submitBtn.visible = false;
-                this.deleteBtn.visible = false;
-            });
-        // this.submitAndReset();
-        this.validGuess();
-        // this.parent.attemptContainer.addAttempt('1234', 'ss',9)
-        // this.parent.guessSubmitHandler();
-    }
-
+ 
     /* ------------------------------------------------------------
         Validation
     ------------------------------------------------------------ */
@@ -217,10 +236,7 @@ export class InputContainer extends PIXI.Container {
         }
 
         if(this.currentGuess == dataProvider.data.secret){
-            this.submitAndReset(1);
-            this.parent.attemptContainer.addAttempt(this.currentGuess, 'Match!', 2);
-            this.parent.endGame(this.currentGuess);
-            this.submitAndReset(true);
+            return 'Match';
         }else{
             let isMatch = 0;
             let isIncluded = 0;
@@ -243,9 +259,7 @@ export class InputContainer extends PIXI.Container {
                     feedback = isIncluded > 0 ? `${isIncluded}B` : feedback;
                 }
             }
-            let flag = isMatch == 0 && isIncluded == 1 ? 0:1;
-            this.submitAndReset();
-            this.parent.attemptContainer.addAttempt(this.currentGuess, feedback, flag);
+            return feedback;
         }
     }
 
@@ -272,6 +286,9 @@ export class InputContainer extends PIXI.Container {
         });
     }
     
+    /* ------------------------------------------------------------
+        KeyPadsの再活性
+    ------------------------------------------------------------ */
     resetKeyPads(){
         for(let i=0; i<10; i++){
             this.keyPadList[i].revibe();
@@ -307,16 +324,5 @@ export class InputContainer extends PIXI.Container {
         gsap.timeline().to(this.guessText, {alpha:1, y:this.guessBasePosY, duration:0.3, ease:'power1.out'}, '+=0.6');
         this.guessStyle.letterSpacing = -50;
         gsap.timeline().to(this.guessStyle, { letterSpacing: 0, duration:0.5, ease: 'back'}, '+=0.6')
-    }
-
-    reset(){
-        this.currentGuess = '';
-        this.guessText.text = '****';
-        this.guessText.y = this.guessBasePosY + 200;
-        this.guessText.alpha = 0;
-        gsap.timeline().to(this.guessText, {alpha:1, y:this.guessBasePosY, duration:0.3, ease:'power1.out'}, '+=0.6');
-        this.guessStyle.letterSpacing = -50;
-        gsap.timeline().to(this.guessStyle, { letterSpacing: 0, duration:0.5, ease: 'back'}, '+=0.6')
-        this.resetKeyPads();
     }
 }

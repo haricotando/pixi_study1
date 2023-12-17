@@ -14,54 +14,53 @@ export class ApplicationRoot extends PIXI.Container {
         super();
 
         this.generateSecretCode();
+        // class整理done
         this.initInfoBtn();
-        this.initStartScreen();
+        if(!dataProvider.data.debug){
+            // Debug時にはSkip
+            this.initStartScreen();
+        }
         this.initInputContainer();
         this.initAttemptConatiner();
-        this.initEndScreen();
     }
 
     /* ------------------------------------------------------------
         StartScreen
     ------------------------------------------------------------ */
     initStartScreen(){
-        // Debugモードではイントロを省略する
-        if(!dataProvider.data.debug){
-            this.startScreen = new StartScreen();
-            this.addChild(this.startScreen);
-        }
+        this.startScreen = new StartScreen();
+        this.addChild(this.startScreen);
     }
     
     initEndScreen(){
         this.endScreen = new EndScreen();
         this.addChild(this.endScreen);
-
-        // if(dataProvider.data.debug){
-        //     gsap.timeline().to(this.endScreen, {alpha:1, duration:1})
-        //         .call(() => {
-        //            this.endScreen.gameover();
-        //         });
-        // }
-        // if(dataProvider.data.debug){
-        //     this.endScreen.start('1234');
-        // }
     }
 
     /* ------------------------------------------------------------
         UI/Input - Keypads, Guess, Submit, Delete
     ------------------------------------------------------------ */
-    initInputContainer(){
-        this.inputContainer = new InputContainer();
-        this.addChild(this.inputContainer);
-        if(dataProvider.data.debug){
+    initInputContainer(isReplay){
+        if(isReplay){
+            this.removeChild(this.inputContainer);
+            this.inputContainer = new InputContainer();
             this.inputContainer.start();
+        }else{
+            this.inputContainer = new InputContainer();
+            if(dataProvider.data.debug){
+                    this.inputContainer.start();
+            }
         }
+        this.addChild(this.inputContainer);
     }
 
     /* ------------------------------------------------------------
         Attempt
     ------------------------------------------------------------ */
-    initAttemptConatiner(){
+    initAttemptConatiner(isReplay){
+        if(isReplay){
+            this.removeChild(this.attemptContainer);
+        }
         this.attemptContainer = new AttemptContainer();
         this.addChild(this.attemptContainer);
     }
@@ -95,28 +94,20 @@ export class ApplicationRoot extends PIXI.Container {
 
     startGame(){
         this.inputContainer.start();
-        // this.infoContainer.start();
-        // this.keyPadContainer.start();
-        // this.guessContainer.start();
     }
 
-    endGame(guess){
-        console.log('endgame')
-        this.endScreen.start(guess);
-    }
-
-    gameover(){
-        console.log('game is over');
-        this.endScreen.gameover();
+    endGame(isMatch){
+        this.endScreen = new EndScreen(isMatch);
+        this.addChild(this.endScreen);
     }
 
     resetGame(){
         this.generateSecretCode();
-        this.inputContainer.reset();
-        // this.removeChild(this.inputContainer);
-        // this.inputContainer = new InputContainer();
+        this.initInputContainer(true);
+        
         this.removeChild(this.attemptContainer);
-        this.initAttemptConatiner();
+        this.initAttemptConatiner(true);
+        this.removeChild(this.endScreen);
     }
 
     /* ==================================================
@@ -131,8 +122,9 @@ export class ApplicationRoot extends PIXI.Container {
             secretCode += digit;
         }
         dataProvider.data.secret = secretCode;
+        dataProvider.data.currentAttempt = 0;
+        dataProvider.data.lastGuess = '';
         console.log(`SECRET: ${secretCode}`)
-        // return secretCode;
     }
 
     echo(){
