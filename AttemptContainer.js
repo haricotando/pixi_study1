@@ -1,5 +1,5 @@
 import AlignHelper from './helper/AlignHelper.js';
-import { dataProvider } from './DataProvider.js';
+import { dataProvider } from './dataProvider.js';
 import GraphicsHelper from './helper/GraphicsHelper.js';
 
 export class AttemptContainer extends PIXI.Container {

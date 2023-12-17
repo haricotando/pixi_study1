@@ -1,5 +1,5 @@
 import AlignHelper from './helper/AlignHelper.js';
-import { dataProvider } from './DataProvider.js';
+import { dataProvider } from './dataProvider.js';
 import { KeyPad } from './KeyPad.js';
 
 export class InputContainer extends PIXI.Container {
