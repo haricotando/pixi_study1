@@ -1,6 +1,6 @@
 import AlignHelper from './helper/AlignHelper.js';
 import GraphicsHelper from './helper/GraphicsHelper.js';
-import { dataProvider } from './dataProvider.js';
+import { dataProvider } from './xdataProvider.js';
 
 export class EndScreen extends PIXI.Container {
     /* ============================================================
