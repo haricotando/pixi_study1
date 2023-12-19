@@ -7,6 +7,7 @@ export const dataProvider = {
         lastGuess: '',
         currentAttempt: 0,
         attemptMax: 10,
+        offsetY: -20,
     },
 };
 

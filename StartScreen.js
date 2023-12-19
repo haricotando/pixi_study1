@@ -74,20 +74,18 @@ export class StartScreen extends PIXI.Container {
         /* 
             ===== Instruction =====
         */
-        this.instStyle = new PIXI.TextStyle({
-            fontFamily:     'Inter',
-            fontSize:       35,
-            fontWeight:     200,
-            fill:           'black',
-            align: 'center',
-        })
-        this.instText = new PIXI.Text('"Hit"\nmeans right digit, right place.\n\n"Blow"\nmeans right digit, wrong place.', this.instStyle);
-        this.instText.anchor.set(0.5);
-        this.instText.y += 250;
-        this.instText.alpha = 0;
-        this.addChild(this.instText);
+        this.instTextContainer = new PIXI.Container();
+        this.addChild(this.instTextContainer);
+        
+        this.instText1 = this.initInstTextContainer('Hit ', 'means right digit, right place.');
+        this.instText2 = this.initInstTextContainer('Blow ', 'means right digit, wrong place.');
+        this.instTextContainer.addChild(this.instText1);
+        this.instTextContainer.addChild(this.instText2);
+        this.instText2.y += 60;
+        this.instTextContainer.y += 250;
+        this.instTextContainer.alpha = 0;
 
-        gsap.timeline().to(this.instText, {alpha: 1, duration: 1}, '+=3.5');
+        gsap.timeline().to(this.instTextContainer, {alpha: 1, duration: 1}, '+=3.5');
         /* 
             ===== StartBtn =====
         */
@@ -114,6 +112,37 @@ export class StartScreen extends PIXI.Container {
                 });
             });
     }
+
+    /* ------------------------------------------------------------
+        説明テキスト用
+    ------------------------------------------------------------ */
+    initInstTextContainer(txt1, txt2){
+        let container = new PIXI.Container();
+
+
+        let instStyle = new PIXI.TextStyle({
+            fontFamily:     'Inter',
+            fontSize:       35,
+            fontWeight:     400,
+            fill:           'black',
+            align: 'center',
+        })
+        let instBoldStyle = new PIXI.TextStyle({
+            fontFamily:     'Inter',
+            fontSize:       35,
+            fontWeight:     600,
+            fill:           'black',
+            align: 'center',
+        })
+        let instBold = new PIXI.Text(txt1, instBoldStyle);
+        let instText = new PIXI.Text(txt2, instStyle);
+        instText.x = instBold.width;
+
+        container.addChild(instBold);
+        container.addChild(instText);
+        container.pivot.set(container.width/2, container.height/2);
+        return container;
+    }
     
     /* ------------------------------------------------------------
         readyToDie
@@ -133,7 +162,7 @@ export class StartScreen extends PIXI.Container {
         //  Stageout
         gsap.timeline().to(this.titleText, {y:this.titleText.y-200, alpha:0, duration:0.3, ease:'power1.in'})
             .to(this.descText, {y:this.descText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=0.2')
-            .to(this.instText, {y:this.instText.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=0.4')
+            .to(this.instTextContainer, {y:this.instTextContainer.y-200, alpha:0, duration:0.3, ease:'power1.in'}, '-=0.4')
         
         gsap.timeline().to(this.circle.scale, {x:50, y:50, duration:0.4})
             .call(() => {

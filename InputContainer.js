@@ -46,8 +46,8 @@ export class InputContainer extends PIXI.Container {
             this.keyPadContainer.width/2, 
             this.keyPadContainer.height/2);
         AlignHelper.xCenterWindow(this.keyPadContainer);
-        this.keyPadContainerBasePosY = window.innerHeight - this.keyPadContainer.height/2 - this.padMargin*4;
-        this.keyPadContainer.y = this.keyPadContainerBasePosY;
+        this.keyPadContainerBasePosY = window.innerHeight - this.keyPadContainer.height/2 - this.padMargin*4 + dataProvider.data.offsetY;
+        // this.keyPadContainer.y = this.keyPadContainerBasePosY;
     }
 
     /* ------------------------------------------------------------
@@ -312,7 +312,7 @@ export class InputContainer extends PIXI.Container {
         this.keyPadContainer.alpha = 0;
         this.keyPadContainer.visible = true;
         gsap.timeline().to(this.keyPadContainer, {alpha:1, duration:0.5}, '+=0.3');
-        this.keyPadContainerBasePosY = window.innerHeight - this.keyPadContainer.height/2 - 30;
+        // this.keyPadContainerBasePosY = window.innerHeight - this.keyPadContainer.height/2 - 30;
         this.keyPadContainer.y = this.keyPadContainerBasePosY + 600;
         this.keyPadContainer.scale.set(3);
         gsap.to(this.keyPadContainer.scale, {x:1, y:1, duration:1, ease:'power1.out'});
