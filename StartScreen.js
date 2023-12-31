@@ -77,8 +77,8 @@ export class StartScreen extends PIXI.Container {
         this.instTextContainer = new PIXI.Container();
         this.addChild(this.instTextContainer);
         
-        this.instText1 = this.initInstTextContainer('Hit ', 'means right digit, right place.');
-        this.instText2 = this.initInstTextContainer('Blow ', 'means right digit, wrong place.');
+        this.instText1 = this.initInstTextContainer('Hit: ', 'means right digit, right place.');
+        this.instText2 = this.initInstTextContainer('Blow:  ', 'means right digit, wrong place.');
         this.instTextContainer.addChild(this.instText1);
         this.instTextContainer.addChild(this.instText2);
         this.instText2.y += 60;
